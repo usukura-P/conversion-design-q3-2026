@@ -1,0 +1,5 @@
+**
+!server/
+!server/*.mjs
+server/*.test.mjs
+!Dockerfile

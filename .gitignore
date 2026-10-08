@@ -1,0 +1,5 @@
+.local/
+artifacts/
+.env
+.env.*
+*.pem

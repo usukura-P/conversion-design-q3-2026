@@ -1,0 +1,789 @@
+{
+  "septemberRevenue": 554427123,
+  "septemberCvr": 1.653647261445,
+  "q2Cvr": 2.215716383668458,
+  "people": [
+    {
+      "id": "usukura",
+      "name": "臼倉",
+      "septemberCvr": null,
+      "q2Cvr": 2.3462463577376016
+    },
+    {
+      "id": "kantake",
+      "name": "寒竹",
+      "septemberCvr": 1.5208274079547142,
+      "q2Cvr": 2.3467403329061565
+    },
+    {
+      "id": "aoki",
+      "name": "青木",
+      "septemberCvr": 1.3241468378629464,
+      "q2Cvr": 1.7131920822268063
+    },
+    {
+      "id": "nakagawa",
+      "name": "中川",
+      "septemberCvr": 2.0139698461034854,
+      "q2Cvr": 2.61531566216211
+    }
+  ],
+  "articles": [
+    {
+      "id": "q2-row-26",
+      "title": "★004_ThePERSONALGYM_完全無料_寒竹_通常記事_7月特典_YT用_20260702",
+      "owner": "kantake",
+      "releaseDate": "2026-07-02",
+      "metaCv": 0,
+      "metaClicks": 0,
+      "cvr": null,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-120",
+      "title": "★003_TCB-ハイフ女性_0円_青木_全AIアンケート_20260702",
+      "owner": "aoki",
+      "releaseDate": "2026-07-02",
+      "metaCv": 6,
+      "metaClicks": 271,
+      "cvr": 2.214022140221402,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-16",
+      "title": "★002_TKBC-医療痩身女性_0円_寒竹_ステップアンケ_脚_20260703",
+      "owner": "kantake",
+      "releaseDate": "2026-07-03",
+      "metaCv": 1288,
+      "metaClicks": 38495,
+      "cvr": 3.3458890765034424,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-38",
+      "title": "★033_TCB-ニキビ女性_0円_寒竹_漫画導入ステップアンケBU_02_20260703",
+      "owner": "kantake",
+      "releaseDate": "2026-07-03",
+      "metaCv": 3,
+      "metaClicks": 276,
+      "cvr": 1.0869565217391304,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-42",
+      "title": "★033_TCB-ニキビ男性_0円_臼倉_AI魂ステップアンケ_20260703",
+      "owner": "usukura",
+      "releaseDate": "2026-07-03",
+      "metaCv": 224,
+      "metaClicks": 11429,
+      "cvr": 1.9599265027561468,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-83",
+      "title": "★001_TKBC-脂肪溶解注射男性_0円_青木_魂ステップアンケ横展開_20260703",
+      "owner": "aoki",
+      "releaseDate": "2026-07-03",
+      "metaCv": 120,
+      "metaClicks": 3950,
+      "cvr": 3.0379746835443036,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-138",
+      "title": "★015_TCB-脂肪溶解からだ女性_0円_青木_全AIセルライト訴求_20260703",
+      "owner": "aoki",
+      "releaseDate": "2026-07-03",
+      "metaCv": 1,
+      "metaClicks": 100,
+      "cvr": 1.0,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-147",
+      "title": "★002_TKBC-ニキビ男性_0円_寒竹_ステップアンケ_20260709",
+      "owner": "kantake",
+      "releaseDate": "2026-07-09",
+      "metaCv": 0,
+      "metaClicks": 124,
+      "cvr": 0.0,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-34",
+      "title": "★034_TCB-ニキビ女性_0円_中川_毛穴_フリップアンケ_複数FV検証_20260710",
+      "owner": "nakagawa",
+      "releaseDate": "2026-07-10",
+      "metaCv": 360,
+      "metaClicks": 11585,
+      "cvr": 3.107466551575313,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-35",
+      "title": "★046_TCB-ピコレーザー女性_0円_寒竹_41_複数FV_若年_20260710",
+      "owner": "kantake",
+      "releaseDate": "2026-07-10",
+      "metaCv": 365,
+      "metaClicks": 14110,
+      "cvr": 2.5868178596739897,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-36",
+      "title": "★001_TKBC-医療痩身男性_0円_青木_魂ステップ横展開_バキバキ_20260710",
+      "owner": "aoki",
+      "releaseDate": "2026-07-10",
+      "metaCv": 248,
+      "metaClicks": 7457,
+      "cvr": 3.3257342094676146,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-73",
+      "title": "★013_TCB-脂肪溶解からだ男性_0円_中川_魂ステップアンケ_複数FV検証_20260710",
+      "owner": "nakagawa",
+      "releaseDate": "2026-07-10",
+      "metaCv": 64,
+      "metaClicks": 2307,
+      "cvr": 2.774165583008236,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-111",
+      "title": "★016_TCB-脂肪溶解からだ女性_0円_中川_ステップアンケ_脚_複数FV検証_20260710",
+      "owner": "nakagawa",
+      "releaseDate": "2026-07-10",
+      "metaCv": 6,
+      "metaClicks": 252,
+      "cvr": 2.380952380952381,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-130",
+      "title": "★003_TCB-ヒアルロン酸全顔女性_3万OFFクーポン_寒竹_通常_パーツ_20260710",
+      "owner": "kantake",
+      "releaseDate": "2026-07-10",
+      "metaCv": 0,
+      "metaClicks": 595,
+      "cvr": 0.0,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-133",
+      "title": "★004_TCB-ヒアルロン酸全顔女性_3万OFFクーポン_寒竹_通常_シワ_20260710",
+      "owner": "kantake",
+      "releaseDate": "2026-07-10",
+      "metaCv": 1,
+      "metaClicks": 193,
+      "cvr": 0.5181347150259068,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-15",
+      "title": "★011_ABCクリニック_15万円OFF_中川_ステップアンケ_FV展開_20260716",
+      "owner": "nakagawa",
+      "releaseDate": "2026-07-16",
+      "metaCv": 3186,
+      "metaClicks": 74692,
+      "cvr": 4.265517056712901,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-84",
+      "title": "★004_エニピル_初月0円_寒竹_避妊訴求_改修イラスト記事_20260716",
+      "owner": "kantake",
+      "releaseDate": "2026-07-16",
+      "metaCv": 181,
+      "metaClicks": 2984,
+      "cvr": 6.065683646112601,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-40",
+      "title": "★034_TCB-クマ再生注射女性_0円_青木_FV改修_老け見え_20260717",
+      "owner": "aoki",
+      "releaseDate": "2026-07-17",
+      "metaCv": 247,
+      "metaClicks": 9656,
+      "cvr": 2.5579950289975146,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-117",
+      "title": "★047_TCB-ピコレーザー女性_0円_寒竹_41_複数FV_F2_20260717",
+      "owner": "kantake",
+      "releaseDate": "2026-07-17",
+      "metaCv": 12,
+      "metaClicks": 653,
+      "cvr": 1.8376722817764166,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-97",
+      "title": "★013_TCB-男性医療脱毛_15,000円_中川_魂ステップアンケ_20260722",
+      "owner": "nakagawa",
+      "releaseDate": "2026-07-22",
+      "metaCv": 45,
+      "metaClicks": 4054,
+      "cvr": 1.110014800197336,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-17",
+      "title": "★017_TCB-脂肪溶解からだ女性_0円_中川_ステップアンケ_全部位_20260723",
+      "owner": "nakagawa",
+      "releaseDate": "2026-07-23",
+      "metaCv": 1521,
+      "metaClicks": 35603,
+      "cvr": 4.2721119006825266,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-54",
+      "title": "★022_TCB-二重男性_4,800円_AI_若年フリップアンケ_20260723",
+      "owner": "ai",
+      "releaseDate": "2026-07-23",
+      "metaCv": 86,
+      "metaClicks": 4702,
+      "cvr": 1.8290089323692045,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-104",
+      "title": "★034_TCB-ニキビ男性_0円_寒竹_15改修_20260724",
+      "owner": "kantake",
+      "releaseDate": "2026-07-24",
+      "metaCv": 20,
+      "metaClicks": 866,
+      "cvr": 2.3094688221709005,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-126",
+      "title": "★001_BTB_2,500円_寒竹_ステップアンケ_20260724",
+      "owner": "kantake",
+      "releaseDate": "2026-07-24",
+      "metaCv": 6,
+      "metaClicks": 386,
+      "cvr": 1.5544041450777202,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-131",
+      "title": "★037_TCB-クマ再生注射男性_0円_臼倉_ステップアンケYT改修_20260724",
+      "owner": "usukura",
+      "releaseDate": "2026-07-24",
+      "metaCv": 0,
+      "metaClicks": 0,
+      "cvr": null,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-148",
+      "title": "★012_ウララクリニック男性_15ヶ月分0円_青木_魂ステップアンケ横展開_20260724",
+      "owner": "aoki",
+      "releaseDate": "2026-07-24",
+      "metaCv": 0,
+      "metaClicks": 0,
+      "cvr": null,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-31",
+      "title": "★012_ABCクリニック_15万円OFF_臼倉_YT審査回避_20260729",
+      "owner": "usukura",
+      "releaseDate": "2026-07-29",
+      "metaCv": 0,
+      "metaClicks": 0,
+      "cvr": null,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-99",
+      "title": "★023_カーブス_3回完全無料_青木_8月オファーステップアンケ_20260730",
+      "owner": "aoki",
+      "releaseDate": "2026-07-30",
+      "metaCv": 22,
+      "metaClicks": 1454,
+      "cvr": 1.5130674002751032,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-149",
+      "title": "★019_エミナルクリニック_49,500円_臼倉_ステップアンケ_20260730",
+      "owner": "usukura",
+      "releaseDate": "2026-07-30",
+      "metaCv": 0,
+      "metaClicks": 0,
+      "cvr": null,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-150",
+      "title": "★022_カーブス_5回完全無料_青木_7月オファーステップアンケ_20260730",
+      "owner": "aoki",
+      "releaseDate": "2026-07-30",
+      "metaCv": 0,
+      "metaClicks": 32,
+      "cvr": 0.0,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-151",
+      "title": "★027_DIOクリニック女性_100万円分0円_中川_5周年_ステアンケ_CPF_20260730",
+      "owner": "nakagawa",
+      "releaseDate": "2026-07-30",
+      "metaCv": 0,
+      "metaClicks": 0,
+      "cvr": null,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-152",
+      "title": "★028_DIOクリニック女性_100万円分0円_中川_5周年_ステアンケ_いをん_20260730",
+      "owner": "nakagawa",
+      "releaseDate": "2026-07-30",
+      "metaCv": 0,
+      "metaClicks": 0,
+      "cvr": null,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-112",
+      "title": "★010_TCB-鼻女性_0円_中川_綺麗めフリップアンケ_FV検証用_20260805",
+      "owner": "nakagawa",
+      "releaseDate": "2026-08-05",
+      "metaCv": 16,
+      "metaClicks": 358,
+      "cvr": 4.4692737430167595,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-113",
+      "title": "★002_TCB-ヒアルロン酸全顔女性_0円_寒竹_通常アンケ_パーツ_20260805",
+      "owner": "kantake",
+      "releaseDate": "2026-08-05",
+      "metaCv": 16,
+      "metaClicks": 292,
+      "cvr": 5.47945205479452,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-39",
+      "title": "★002_TKBC-脂肪溶解注射女性_無料_中川_ステップアンケ_脚_20260806",
+      "owner": "nakagawa",
+      "releaseDate": "2026-08-06",
+      "metaCv": 205,
+      "metaClicks": 5870,
+      "cvr": 3.492333901192504,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-67",
+      "title": "★004_TKBC-二重女性_０円_寒竹_TCB横展開ステップアンケ_20260806",
+      "owner": "kantake",
+      "releaseDate": "2026-08-06",
+      "metaCv": 70,
+      "metaClicks": 1728,
+      "cvr": 4.050925925925926,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-24",
+      "title": "★038_TCB-クマ再生注射男性_0円_寒竹_M2向け_BU_メガネ男_PU_20260807",
+      "owner": "kantake",
+      "releaseDate": "2026-08-07",
+      "metaCv": 519,
+      "metaClicks": 14294,
+      "cvr": 3.6308940814327686,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-53",
+      "title": "★002_TKBC-AGA男性_無料_臼倉_オファー変更_20260807",
+      "owner": "usukura",
+      "releaseDate": "2026-08-07",
+      "metaCv": 116,
+      "metaClicks": 3428,
+      "cvr": 3.38389731621937,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-122",
+      "title": "★035_TCB-ニキビ女性_０円_寒竹_ステップアンケ_分岐_理解度別_20260807",
+      "owner": "kantake",
+      "releaseDate": "2026-08-07",
+      "metaCv": 212,
+      "metaClicks": 9281,
+      "cvr": 2.2842366124340048,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-153",
+      "title": "★007_ピラティスK_0円_寒竹_ステップアンケ_20260807",
+      "owner": "kantake",
+      "releaseDate": "2026-08-07",
+      "metaCv": 0,
+      "metaClicks": 0,
+      "cvr": null,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-79",
+      "title": "★003_TKBC-鼻女性_無料_中川_フリップアンケ_懸念払拭_20260810",
+      "owner": "nakagawa",
+      "releaseDate": "2026-08-10",
+      "metaCv": 60,
+      "metaClicks": 3197,
+      "cvr": 1.876759461995621,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-94",
+      "title": "★007_DIO脱毛男性_11ヶ月分0円_寒竹_全AI記事_20260813",
+      "owner": "kantake",
+      "releaseDate": "2026-08-13",
+      "metaCv": 19,
+      "metaClicks": 2087,
+      "cvr": 0.9103977000479155,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-101",
+      "title": "★001_TCB-ヒアルロン酸全顔女性_0円_寒竹_通常アンケ_シワ_20260813",
+      "owner": "kantake",
+      "releaseDate": "2026-08-13",
+      "metaCv": 46,
+      "metaClicks": 881,
+      "cvr": 5.2213393870601585,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-30",
+      "title": "★008_TCB-ほくろ除去女性_0円_青木_イボ特化FV_20260814",
+      "owner": "aoki",
+      "releaseDate": "2026-08-14",
+      "metaCv": 446,
+      "metaClicks": 17194,
+      "cvr": 2.593928114458532,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-107",
+      "title": "★020_エミナルクリニック_一括49,500円_臼倉_ステップアンケ_20260814",
+      "owner": "usukura",
+      "releaseDate": "2026-08-14",
+      "metaCv": 11,
+      "metaClicks": 649,
+      "cvr": 1.694915254237288,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-128",
+      "title": "★004_スリープメディカルクリニック_99,000円分無料_青木_いびき治療_20260814",
+      "owner": "aoki",
+      "releaseDate": "2026-08-14",
+      "metaCv": 182,
+      "metaClicks": 9553,
+      "cvr": 1.9051606825081127,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-118",
+      "title": "★011_TCB-鼻女性_0円_中川_綺麗めフリップアンケ_F2小鼻縮小_20260817",
+      "owner": "nakagawa",
+      "releaseDate": "2026-08-17",
+      "metaCv": 7,
+      "metaClicks": 496,
+      "cvr": 1.411290322580645,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-20",
+      "title": "★001_DIOAGA_15ヶ月分0円_AI_若年ステップアンケ_20260820",
+      "owner": "ai",
+      "releaseDate": "2026-08-20",
+      "metaCv": 0,
+      "metaClicks": 0,
+      "cvr": null,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-92",
+      "title": "★035_TCB-クマ再生注射女性_0円_寒竹_スワイプ_20260820",
+      "owner": "kantake",
+      "releaseDate": "2026-08-20",
+      "metaCv": 61,
+      "metaClicks": 3782,
+      "cvr": 1.6129032258064515,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-32",
+      "title": "★001_NEXUSジム_初回体験無料_青木_ザパソ横展開_20260821",
+      "owner": "aoki",
+      "releaseDate": "2026-08-21",
+      "metaCv": 2,
+      "metaClicks": 779,
+      "cvr": 0.25673940949935814,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-76",
+      "title": "★002_DIOAGA_15ヶ月分100円_AI_若年ステップアンケ_20260821",
+      "owner": "ai",
+      "releaseDate": "2026-08-21",
+      "metaCv": 7,
+      "metaClicks": 815,
+      "cvr": 0.8588957055214724,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-25",
+      "title": "★003_TKBC-脂肪溶解注射女性_0円_寒竹_アンケ記事_お腹訴求_20260827",
+      "owner": "kantake",
+      "releaseDate": "2026-08-27",
+      "metaCv": 598,
+      "metaClicks": 12719,
+      "cvr": 4.701627486437613,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-93",
+      "title": "★050_TCB-ピコレーザー女性_0円_青木_第二向けシミ特化_20260828",
+      "owner": "aoki",
+      "releaseDate": "2026-08-28",
+      "metaCv": 48,
+      "metaClicks": 2404,
+      "cvr": 1.9966722129783694,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-154",
+      "title": "★029_DIOクリニック女性_100万円分0円_青木_CPFのLP用（選択不可）_20260828",
+      "owner": "aoki",
+      "releaseDate": "2026-08-28",
+      "metaCv": 0,
+      "metaClicks": 0,
+      "cvr": null,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-75",
+      "title": "★019_TCB-脂肪溶解からだ女性_0円_中川_フリップアンケ_全部位_動画記事_20260903",
+      "owner": "nakagawa",
+      "releaseDate": "2026-09-03",
+      "metaCv": 324,
+      "metaClicks": 6387,
+      "cvr": 5.072804133395961,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-98",
+      "title": "★036_TCB-クマ再生注射女性_0円_AI_診断型アンケート_20260903",
+      "owner": "ai",
+      "releaseDate": "2026-09-03",
+      "metaCv": 25,
+      "metaClicks": 1271,
+      "cvr": 1.9669551534225018,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-114",
+      "title": "★030_DIOクリニック女性_150万円分0円_青木_CPFのLP用（選択不可）_20260903",
+      "owner": "aoki",
+      "releaseDate": "2026-09-03",
+      "metaCv": 0,
+      "metaClicks": 0,
+      "cvr": null,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-43",
+      "title": "★038_TCB-ニキビ女性_０円_寒竹_フリップアンケ_ハイドラ_20260904",
+      "owner": "kantake",
+      "releaseDate": "2026-09-04",
+      "metaCv": 199,
+      "metaClicks": 8580,
+      "cvr": 2.3193473193473193,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-85",
+      "title": "★037_TCB-ニキビ女性_5,350円_寒竹_フリップアンケ_リジュラン_20260904",
+      "owner": "kantake",
+      "releaseDate": "2026-09-04",
+      "metaCv": 7,
+      "metaClicks": 305,
+      "cvr": 2.2950819672131146,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-109",
+      "title": "★008_DIO脱毛男性_11ヶ月分0円_青木_VIO・素材一貫性_20260904",
+      "owner": "aoki",
+      "releaseDate": "2026-09-04",
+      "metaCv": 0,
+      "metaClicks": 75,
+      "cvr": 0.0,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-134",
+      "title": "★003_DIOAGA_15ヶ月分100円_中川_ステップアンケ_TKBC横展開_20260904",
+      "owner": "nakagawa",
+      "releaseDate": "2026-09-04",
+      "metaCv": 1,
+      "metaClicks": 396,
+      "cvr": 0.25252525252525254,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-155",
+      "title": "★004_DIOAGA_15ヶ月分0円_中川_ステップアンケ_TKBC横展開_20260904",
+      "owner": "nakagawa",
+      "releaseDate": "2026-09-04",
+      "metaCv": 0,
+      "metaClicks": 0,
+      "cvr": null,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-135",
+      "title": "★009_DIO脱毛男性_11ヶ月分100円_青木_VIO・素材一貫性_20260908",
+      "owner": "aoki",
+      "releaseDate": "2026-09-08",
+      "metaCv": 1,
+      "metaClicks": 125,
+      "cvr": 0.8,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-178",
+      "title": "★001_Ohmyteeth_6ヶ月分0円_中川_フリップアンケ_CPF_20260909",
+      "owner": "nakagawa",
+      "releaseDate": "2026-09-09",
+      "metaCv": 0,
+      "metaClicks": 0,
+      "cvr": null,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-66",
+      "title": "★026_カーブス_1ヶ月完全無料体験_青木_9月オファー通常アンケ導線_20260910",
+      "owner": "aoki",
+      "releaseDate": "2026-09-10",
+      "metaCv": 53,
+      "metaClicks": 1782,
+      "cvr": 2.974186307519641,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-80",
+      "title": "★005_スリープメディカルクリニック_99,000円分無料_中川_痩せ訴求_ヒカル_20260910",
+      "owner": "nakagawa",
+      "releaseDate": "2026-09-10",
+      "metaCv": 44,
+      "metaClicks": 2388,
+      "cvr": 1.8425460636515913,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-68",
+      "title": "★001_TKBC-脂肪吸引注射女性_0円_中川_全AI_フリップアンケ_TCB横展_20260911",
+      "owner": "nakagawa",
+      "releaseDate": "2026-09-11",
+      "metaCv": 32,
+      "metaClicks": 1433,
+      "cvr": 2.2330774598743894,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-156",
+      "title": "★051_TCB-ピコレーザー女性_0円_寒竹_フリップアンケ_薄いシミ訴求_20260911",
+      "owner": "kantake",
+      "releaseDate": "2026-09-11",
+      "metaCv": 0,
+      "metaClicks": 49,
+      "cvr": 0.0,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-45",
+      "title": "★039_TCB-ニキビ女性_０円_寒竹_チャット型_再改修_20260915",
+      "owner": "kantake",
+      "releaseDate": "2026-09-15",
+      "metaCv": 3,
+      "metaClicks": 379,
+      "cvr": 0.79155672823219,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-116",
+      "title": "★004_TKBC-脂肪溶解注射女性_0円_中川_通常アンケ_顔訴求_20260917",
+      "owner": "nakagawa",
+      "releaseDate": "2026-09-17",
+      "metaCv": 2,
+      "metaClicks": 299,
+      "cvr": 0.6688963210702341,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-52",
+      "title": "★040_TCB-ニキビ女性_0円_寒竹_フリップアンケ_ひかる_毛穴治療_20260918",
+      "owner": "kantake",
+      "releaseDate": "2026-09-18",
+      "metaCv": 112,
+      "metaClicks": 6478,
+      "cvr": 1.72892868169188,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-115",
+      "title": "★052_TCB-ピコレーザー女性_0円_青木_GG特化_準顕在層向け_20260918",
+      "owner": "aoki",
+      "releaseDate": "2026-09-18",
+      "metaCv": 35,
+      "metaClicks": 2299,
+      "cvr": 1.5224010439321443,
+      "excluded": false
+    },
+    {
+      "id": "q2-row-123",
+      "title": "★014_TCB-糸リフト女性_0円_寒竹_3万円OFF_若見えセット_20260918",
+      "owner": "kantake",
+      "releaseDate": "2026-09-18",
+      "metaCv": 4,
+      "metaClicks": 201,
+      "cvr": 1.9900497512437811,
+      "excluded": false
+    }
+  ],
+  "sources": [
+    {
+      "label": "9月PC局全体売上：全社シート「9/1ﾏｲﾙｽﾄｰﾝ」の実績（2026年10月4日確認）",
+      "url": "https://docs.google.com/spreadsheets/d/1ru6aCHlUz18OvnXm4qLfEqfcxQufsD23cKKghBFY60Q/edit#gid=235256429",
+      "asOf": "2026-10-04"
+    },
+    {
+      "label": "記事母集団：2026年度リリース記事一覧「作業用」。Meta CV・クリックはAXADからリリース日〜9/30で再照合（2026年10月9日）",
+      "url": "https://docs.google.com/spreadsheets/d/1Zj92j8q0oF-odvkpVg3V3xUgQ2rOVqL777BY2GkFQX8/edit?gid=743250969",
+      "asOf": "2026-10-09"
+    },
+    {
+      "label": "元の2Qレポート：73記事の明細。平均CVRは本ページの新条件で再計算",
+      "url": "https://docs.google.com/spreadsheets/d/1k2ZQVGfKhuLaVgC23qYqBePFUvT4ih8UYvIqnIRttio/edit",
+      "asOf": "2026-10-05"
+    }
+  ],
+  "notes": [
+    "9月は2026/9/1〜9/30リリース19本、算出可能16本・算出不可3本・名称除外0本。2Qは2026/7/1〜9/30リリース73本、算出可能60本・算出不可13本・名称除外0本。",
+    "各記事のMeta実質CVR＝リリース日〜2026/9/30のMeta CV÷Metaクリック×100。記事を同じ重みで単純平均。消化額による足切りなし。",
+    "記事名に「貸し」または「修正」を含む記事を除外。「改修」は対象。Meta未配信・クリック0は算出不可、クリックあり・CV0は0%で平均に含む。",
+    "チーム平均には既存リリース記事母集団のAI記事も含む。個人平均は臼倉・寒竹・青木・中川の担当記事で算出。",
+    "臼倉の9月リリース記事は0本のため、9月CVRは未算出。未算出を0%とは扱わない。",
+    "9月PC局全体売上554,427,123円はKGIの比較起点。9月リリース記事の売上22,628,400円とは異なる。",
+    "旧資料の2Q2.46%・9月1.97%はMeta消化10万円以上という旧条件。このページの比較値には使用しない。"
+  ]
+}
