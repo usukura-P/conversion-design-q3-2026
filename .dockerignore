@@ -3,3 +3,4 @@
 !server/*.mjs
 server/*.test.mjs
 !Dockerfile
+!server/github_known_hosts

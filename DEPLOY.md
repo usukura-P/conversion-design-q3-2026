@@ -12,7 +12,7 @@
 
 APIは全schemaを検証し、baselineを変更不可にする。Git blob SHAのrevisionで競合を検出し409を返す。requestIdと入力内容のhashをcommitに記録し、プロセス再起動や別の更新後も同一リクエストを二重保存しない。別の人の更新後に古いリクエストが再送されても、現在の状態を返し、過去内容で上書きしない。Git履歴がこの記録を兼ねるためforce pushしない。
 
-サーバーは起動後の初回利用時に`/tmp/q3-progress-*`へ専用checkoutとmode600の鍵を作る。GitHub `/meta`をHTTPSで読み、SSHの接続先公開鍵検証を有効にする。キーとtokenはgit子プロセスの環境へ引き継がない（鍵のファイルパスのみ）。GitHubへのpush後にfetch/readbackして保存を確認する。
+サーバーは起動後の初回利用時に`/tmp/q3-progress-*`へ専用checkoutとmode600の鍵を作る。GitHub公式`https://api.github.com/meta`から2026-10-09にHTTPSで確認した公開host keysを`server/github_known_hosts`へ同梱し、SSHの接続先公開鍵検証を有効にする。実行時にGitHub REST APIは呼ばない。公式[SSH over HTTPS port](https://docs.github.com/en/authentication/troubleshooting-ssh/using-ssh-over-the-https-port)の`ssh.github.com:443`を使用する。鍵が変更された場合は公式HTTPS metaと指紋を照合して同梱ファイルを更新する。キーとtokenはgit子プロセスの環境へ引き継がない（鍵のファイルパスのみ）。GitHubへのpush後にfetch/readbackして保存を確認する。
 
 ## ローカル検証
 

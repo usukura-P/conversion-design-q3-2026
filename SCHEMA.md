@@ -12,7 +12,7 @@
 - initiatives: [{id:string,title:string,owner:id,stage:"idea"|"meeting"|"agreed"|"production"|"released"|"dispatched"|"reviewed",meetingDate:date|null,dispatchDate:date|null,deadline:date|null,evidence:string,background:string,craft:string,feedback:string,learning:string,next:string,url:string}]
 - weeks: [{id:月曜の日付,releaseStart:前週月曜,releaseEnd:前週日曜,team:{status:string,change:string,issues:string,priorities:string,requests:string},members:{各id:{reflection:string,feedback:string,action:string}},qualitative:[{id:string,status:"not_started"|"in_progress"|"achieved",evidence:string,next:string}],metrics:{asOf:ISO|null,teamCvr:number|null,previousWeekCvr:number|null,eligibleArticles:number,unmeasurableArticles:number,dispatched:number,people:{各id:{cvr:number|null,proposals:number}}}}]
 - goalsはコード内固定: 売上・CVR・配信・個人立案と原文定性。state内で変更しない。
-- 未入力はnull／空文字、実績0を生成しない。draftはlocalStorage。metricsは該当週を保存するときに現在のstateから生成し、他週は変更しない。
+- 未入力はnull／空文字、実績0を生成しない。draftはlocalStorage。metricsは最新週を保存するときに現在のstateから生成する。過去週の文言編集では既存metricsを保持し、過去週の未記録metricsも現在データで埋めない。
 
 ## baseline.articles
 [{id,title,owner,releaseDate,metaCv,metaClicks,cvr:number|null,excluded:boolean}]。過去の原データの公開可否を精査し、秘密を入れない。sources [{label,url,asOf}]。保存サーバーはbaselineをimmutable扱い。
