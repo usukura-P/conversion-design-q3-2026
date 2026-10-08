@@ -1,7 +1,8 @@
+import {createWeek} from '../public/model.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {validateEnvelope,validateState,jstDate} from './validation.mjs';
-export const sample = () => ({schemaVersion:1,updatedAt:null,baseline:{septemberRevenue:554427123,septemberCvr:null,q2Cvr:null,people:[],articles:[],sources:[],notes:[]},monthlyRevenue:[{month:'2026-10',actual:null,asOf:null},{month:'2026-11',actual:null,asOf:null},{month:'2026-12',actual:null,asOf:null}],articles:[],initiatives:[],weeks:[]});
+export const sample = () => ({schemaVersion:1,updatedAt:null,baseline:{septemberRevenue:554427123,septemberCvr:null,q2Cvr:null,people:[],articles:[],sources:[],notes:[]},monthlyRevenue:[{month:'2026-10',actual:null,asOf:null},{month:'2026-11',actual:null,asOf:null},{month:'2026-12',actual:null,asOf:null}],articles:[],initiatives:[],weeks:[createWeek('2026-10-12')]});
 const envelope = () => ({state:sample(),revision:'a'.repeat(40),requestId:'550e8400-e29b-41d4-a716-446655440000',editor:'臼倉'});
 test('empty valid snapshot and nullable inputs',()=>assert.doesNotThrow(()=>validateEnvelope(envelope())));
 test('unknown keys including arbitrary repo and token rejected',()=>{for(const key of ['repo','path','token','branch','__proto__']){const input=JSON.parse(JSON.stringify(envelope()));Object.defineProperty(input,key,{value:'bad',enumerable:true});assert.throws(()=>validateEnvelope(input));}});
@@ -11,3 +12,5 @@ test('HTML, javascript URL, excessive text and duplicate id are rejected',()=>{f
 test('week must be Monday and release range must be preceding Monday-Sunday',()=>{const input=sample();input.weeks=[{id:'2026-10-13'}];assert.throws(()=>validateState(input));});
 test('JST date rolls over at UTC 15:00',()=>{assert.equal(jstDate(new Date('2026-10-09T14:59:59Z')),'2026-10-09');assert.equal(jstDate(new Date('2026-10-09T15:00:00Z')),'2026-10-10');});
 test('ISO snapshot timestamps reject impossible calendar dates',()=>{const s=sample();s.updatedAt='2026-02-30T00:00:00Z';assert.throws(()=>validateState(s));s.updatedAt='2026-10-09T00:00:00Z';assert.doesNotThrow(()=>validateState(s));});
+test('weekly revenue snapshots are optional for old data, strict when present',async()=>{const {createWeek}=await import('../public/model.js');const s=sample();s.weeks=[createWeek('2026-10-12')];delete s.weeks[0].metrics.monthlyRevenue;assert.doesNotThrow(()=>validateState(s));s.weeks[0].metrics.monthlyRevenue=structuredClone(s.monthlyRevenue);assert.doesNotThrow(()=>validateState(s));s.monthlyRevenue[0].actual=999;assert.equal(s.weeks[0].metrics.monthlyRevenue[0].actual,null);s.weeks[0].metrics.monthlyRevenue[0].actual=-1;assert.throws(()=>validateState(s));});
+test('at least one week and exactly five known qualitative goals preserve rendering',()=>{const s=sample();s.weeks=[];assert.throws(()=>validateState(s));for(const mutation of [w=>w.qualitative=[],w=>w.qualitative.pop(),w=>w.qualitative[0].id='unrequested',w=>w.qualitative[0].id='evidence']){const input=sample();mutation(input.weeks[0]);assert.throws(()=>validateState(input));}});

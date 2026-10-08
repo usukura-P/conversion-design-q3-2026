@@ -10,7 +10,7 @@
 - monthlyRevenue: [{month:"2026-10"|"2026-11"|"2026-12",actual:number|null,asOf:"YYYY-MM-DD"|null}]
 - articles: [{id:string,title:string,owner:上記id,releaseDate:"YYYY-MM-DD",metaCv:number|null,metaClicks:number|null,observedThrough:"YYYY-MM-DD"|null,initiativeId:string|null}]
 - initiatives: [{id:string,title:string,owner:id,stage:"idea"|"meeting"|"agreed"|"production"|"released"|"dispatched"|"reviewed",meetingDate:date|null,dispatchDate:date|null,deadline:date|null,evidence:string,background:string,craft:string,feedback:string,learning:string,next:string,url:string}]
-- weeks: [{id:月曜の日付,releaseStart:前週月曜,releaseEnd:前週日曜,team:{status:string,change:string,issues:string,priorities:string,requests:string},members:{各id:{reflection:string,feedback:string,action:string}},qualitative:[{id:string,status:"not_started"|"in_progress"|"achieved",evidence:string,next:string}],metrics:{asOf:ISO|null,teamCvr:number|null,previousWeekCvr:number|null,eligibleArticles:number,unmeasurableArticles:number,dispatched:number,people:{各id:{cvr:number|null,proposals:number}}}}]
+- weeks: [{id:月曜の日付,releaseStart:前週月曜,releaseEnd:前週日曜,team:{status:string,change:string,issues:string,priorities:string,requests:string},members:{各id:{reflection:string,feedback:string,action:string}},qualitative:[{id:string,status:"not_started"|"in_progress"|"achieved",evidence:string,next:string}],metrics:{asOf:ISO|null,teamCvr:number|null,previousWeekCvr:number|null,eligibleArticles:number,unmeasurableArticles:number,dispatched:number,monthlyRevenue:月次実績3件のスナップショット（旧記録では省略可）,people:{各id:{cvr:number|null,proposals:number}}}}]
 - goalsはコード内固定: 売上・CVR・配信・個人立案と原文定性。state内で変更しない。
 - 未入力はnull／空文字、実績0を生成しない。draftはlocalStorage。metricsは最新週を保存するときに現在のstateから生成する。過去週の文言編集では既存metricsを保持し、過去週の未記録metricsも現在データで埋めない。
 
@@ -24,3 +24,8 @@
 - GET /health => {ok:true}。
 - CORSは公開ページとlocalhost開発origin。誰でも匿名編集を許可（ログイン・合言葉なし）。資格情報はブラウザ非露出。
 - 初期公開でAPI未接続のまま完了扱いにしない。
+
+## 週次の数値保全
+- 最新週の保存でmetrics.monthlyRevenueにstate.monthlyRevenueを複製する。過去週ではその週のスナップショットを表示し、売上未記録の旧週は未記録と表示する。
+- weeksは最低1件。qualitativeはissues/evidence/feedback/knowledge/onboardingの5項目を全て必須とする。
+- 保存中は入力を停止し、応答待ちの入力が消失しないようにする。通信失敗の再送では同じenvelopeを使い、同時編集は重複しない変更のみ統合する。
