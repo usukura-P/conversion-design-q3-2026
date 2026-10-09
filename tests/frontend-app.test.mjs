@@ -73,3 +73,5 @@ test('a saved historical field does not replace its old snapshots',async()=>{
 test('every app import exists in shipped model',()=>{for(const name of readFileSync(new URL('../public/app.js',import.meta.url),'utf8').match(/^import \{([^}]+)\}/)[1].split(',').map(x=>x.trim()))assert.ok(name in model,name);});
 
 test('unsaved text does not enter shared weekly history',()=>{const h=harness();h.input('weeks.0.team.status','unshared private draft');assert.doesNotMatch(h.api.history(),/unshared private draft/);});
+
+test('partial AXAD import is explicitly scoped and reference text is escaped',()=>{const h=harness();h.set('importStatus',{populationComplete:false,asOf:'2026-10-09',note:'6記事は公開日未確認 <img src=x onerror=alert(1)>',references:[]});h.api.render();const html=h.node('#main').innerHTML;assert.match(html,/登録分のみ/);assert.match(html,/参考明細と算出根拠はローカル/);assert.match(html,/&lt;img/);assert.doesNotMatch(html,/<img src=x/);assert.equal(h.api.get().state.articles.length,0);});
