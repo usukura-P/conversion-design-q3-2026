@@ -91,3 +91,11 @@ API保存commit d5ae7225db5d089d8d0cca78aed550061e872262とGET読戻しが一致
 公開JSONは {schemaVersion:1,asOf,fetchedAtJst,media:'META',populationComplete:false,articles:[{id,title,owner,projectName,articleNo,releaseDate,observedThrough,metrics:{spend,impressions,clicks,mcv,cv,revenue,profit}}],trend:{basis:'article_mean',september:[{releaseStart,releaseEnd,observedThrough,teamCvr,eligibleArticles,people:{usukura,kantake,aoki,nakagawa}}],quarter:[同型]},notes:[...]} とする。各people値はnumber|null、usukuraはteamCvr。sourceのみの記事除外を守る。NULL、不正、複数番号の除外は根拠と検算に記録し未取得を0にしない。参照データ未取得時はAXAD未取得として表示し、不正な詳細数値を合成しない。過去表示は対応する当時rawが無ければ最新rawを当時値に見せない。
 
 ロールバック: 新公開commitを戻し、既存API更新は更新前stateを読取り保全して対応項目だけ復旧。秘密・原票Chatwork本文・内部ソース/SQLは公開commitへ入れない。
+
+## 2026-10-09 上部表示の簡略化（ユーザー承認済み）
+- 削除: 上部eyebrow、見出し「目標から、次の一手へ。」、説明文と集計日時、青いAXAD取得説明枠。
+- 保持: 表示する週/週追加、更新者/下書き、通信・競合など必要な状態通知、保存・最新確認、既存数値/グラフ/保存API。
+- 左上のブランドロゴを現在の日本時間の日時へ置換（分単位で更新）。モバイルでも日時が見える配置を確認。
+- 変更対象: public/index.html, public/app.js, public/style.css。既存frontendテストが構成に依存する場合のみ最小調整。
+- 検証: JS全テスト、構文/差分、公開PC・390px画面。日時がAXAD集計日や保存日時と混同されない文言とする。
+- リスク/戻し方: DOM参照/スマホsidebar非表示に注意。既存API/データは変更せず、UIコミットのrevertで復旧可。
