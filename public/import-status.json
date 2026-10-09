@@ -4,14 +4,14 @@
   "populationComplete": false,
   "counts": {
     "candidateArticles": 8,
-    "adopted": 1,
-    "eligible": 1,
+    "adopted": 7,
+    "eligible": 7,
     "excluded": 1,
     "unmeasurable": 0,
     "noMatchingRows": 0,
-    "unconfirmed": 6,
+    "unconfirmed": 0,
     "ambiguousCandidates": 0,
     "outOfCandidateSetExcludedObserved": 2
   },
-  "note": "AXAD実数は公開日まで確認した1記事を登録。6記事は公開日未確認で参考値のみ、1記事は名称の「修正」で除外。3Qの全記事母集団は未確定のため、全体指標は未集計。保存後の平均は登録分の集計です。PC局売上・個人立案・施策配信数は別の根拠を確認中。10/9当日分は途中実績。"
+  "note": "10/9 13:08 JST取得、観測は各記事の採用リリース日〜10/9。タイトル・完成・周知日の一致を承認された基準として採用し、修正1記事を除く7記事を登録。平均は登録対象の記事ごとの単純平均です。10月売上はMG＋GGに対応すると確認されたAXAD旧第1＋第2事業部の全媒体revenue（10/1〜9）、FG/CG除外・差額調整なし。9月比較値は従来資料の値を保持。10/9当日分は途中実績。立案・施策件数は別の記録が必要です。"
 }
