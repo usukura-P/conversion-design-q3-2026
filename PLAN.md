@@ -42,3 +42,9 @@ SCHEMA.mdを正とする。担当以外のファイルを上書きしない。�
 - Pages workflow はNode.js 24で全回帰テストを実行後、`data/state.json` を静的fallbackに含めて公開する。API URLと既存Pages originを維持する。
 - 残作業: 対象commitを公開し、Pages Action成功を確認。公開URLでPC・スマホの読取専用ブラウザQAを行う。ローカルブラウザの接続制約により、この最終画面確認は公開後に実施する。
 - 公開先: https://usukura-p.github.io/conversion-design-q3-2026/ 。repo: https://github.com/usukura-P/conversion-design-q3-2026 。ブランチ: `codex/3q-dashboard`。
+
+## 2026-10-09 個別保存への変更
+
+- 全体の編集・保存を、既存の欄・記録ごとの保存に変更。最新共有状態へ対象だけを統合し、他の下書きと共有側の無関係な更新を保持。API・権限・baselineは変更しない。
+- タブごとの下書き、同一欄の明示的競合選択、失敗時の同一envelope再送、安定IDによる入力、過去スナップショット保持を回帰検証。メモリ専用ローカルAPIで実ブラウザの二タブ競合・失敗再送を確認。
+- 3QのAXAD原数は今回未取得。正式な接続先・既存ログインの確認待ち。リリース通知や集計範囲不明の月次表を実数の代わりに採用しない。

@@ -135,3 +135,32 @@ export function applyConflictChoice(state,conflict,choice){
  }
  return true;
 }
+
+// A block carries only its own editable path. Shared state is always the source
+// for the save envelope; other local blocks never enter that envelope.
+export function blockValue(state,path){return cloneMergeValue(conflictValue(state,path));}
+export function setBlockValue(state,path,value){return applyConflictChoice(state,{path,mine:value,mineDelete:value===undefined},'mine');}
+export function makeBlockDraft(shared,path){return {path:structuredClone(path),baseState:structuredClone(shared),mine:blockValue(shared,path),conflicts:[],pendingSave:null,error:''};}
+export function mergeBlockDraft(draft,shared){
+ const local=structuredClone(draft.baseState);
+ if(!setBlockValue(local,draft.path,draft.mine))return {state:structuredClone(shared),conflicts:[],parentMissing:true};
+ // A colleague deleting a parent is not permission to restore its old contents.
+ if(conflictValue(shared,draft.path.slice(0,-1))===undefined)return {state:structuredClone(shared),conflicts:[],parentMissing:true};
+ const result=rebaseDraft(draft.baseState,local,shared,draft.conflicts||[]);
+ return {...result,parentMissing:false};
+}
+export function overlayBlockDrafts(shared,drafts){
+ const view=structuredClone(shared);
+ for(const draft of Object.values(drafts))setBlockValue(view,draft.path,draft.mine);
+ return view;
+}
+export function chooseBlockConflict(draft,index,choice){
+ const local=structuredClone(draft.baseState);setBlockValue(local,draft.path,draft.mine);
+ if(!applyConflictChoice(local,draft.conflicts[index],choice))return false;
+ draft.mine=blockValue(local,draft.path);draft.conflicts.splice(index,1);draft.pendingSave=null;return true;
+}
+export function exportBlockDrafts(shared,drafts){
+ const mine=overlayBlockDrafts(shared,drafts);
+ for(const draft of Object.values(drafts))for(const conflict of draft.conflicts||[])applyConflictChoice(mine,conflict,'mine');
+ return {schemaVersion:2,shared:structuredClone(shared),mine,drafts:structuredClone(drafts)};
+}

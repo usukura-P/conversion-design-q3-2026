@@ -28,4 +28,10 @@
 ## 週次の数値保全
 - 最新週の保存でmetrics.monthlyRevenueにstate.monthlyRevenueを複製する。過去週ではその週のスナップショットを表示し、売上未記録の旧週は未記録と表示する。
 - weeksは最低1件。qualitativeはissues/evidence/feedback/knowledge/onboardingの5項目を全て必須とする。
-- 保存中は入力を停止し、応答待ちの入力が消失しないようにする。通信失敗の再送では同じenvelopeを使い、同時編集は重複しない変更のみ統合する。
+- 保存中は対象欄を停止し、他の欄の入力は下書きとして保持する。最新読込中は全入力を停止する。通信失敗の再送では同じenvelopeを使い、同時編集は重複しない変更のみ統合する。
+
+## 欄ごとの下書き（フロント専用）
+
+API schemaVersion 1は維持する。最新GETに対象欄だけを三方向統合し、既存POST envelopeで送る。チーム・個人は文言ごと、定性は目標ID、売上は月、記事・施策は記録IDが保存単位。未共有の新しい週のみ週全体を保存する。
+
+localStorageの下書きはschemaVersion 2、ページごとのUUIDキーと安定した記録IDパスを使う。競合の両案と失敗時のpendingSaveを保持し、別タブのstorageイベントは現在の入力を置き換えない。ダウンロードには共有状態・自分の案・競合情報を含む。baselineと過去週metricsは共有側を維持する。
