@@ -29,3 +29,16 @@ SCHEMA.mdを正とする。担当以外のファイルを上書きしない。�
 
 ## 検証／ロールバック
 除外ワード、クリック0、0CV、日付境界、個人平均、nullと0、前週／3Q、過去スナップショット、保存失敗・競合、XSS、API任意パス書込拒否。PC／スマホ表示、匿名編集→保存→別端末読込を検証。Git履歴から状態復元、公開版は前commitへ戻せる。
+
+## 公開前チェックポイント（2026-10-09 JST）
+
+- 既存frontendをクラウド作業環境へ引き継ぎ、デザインとAPI契約を維持して最終コードQAを実施。
+- `node --test server/*.test.mjs tests/*.test.mjs` は61件成功、失敗0件。JavaScript構文検査と差分の空白検査も通過。
+- 下書き保持、保存失敗・再送、409、競合下書きの再統合、読込中の入力保護、XSSエスケープ、過去スナップショットを回帰テストで確認。
+- 同時編集で関連施策が削除された場合は、記事の関連施策を明示的に選び直してから保存する。
+- `data/state.json` は引継ぎ元の共有commit `0c70a2e80f476e5afaa109081268fee69fc5c5e1` とバイト単位で同一。今回のQAでは本番APIへ書き込まず、backend実装も変更していない。
+- 9月比較1.653647261445%、2Q参考2.215716383668458%。過去調査では73/73記事のMeta原数をAXADで照合済み。今回、保存済み73記事からチーム・個人平均を再検算して一致を確認。3Q実績は未入力のまま。
+- 保存API: https://q3-progress-api-295429960025.asia-northeast1.run.app 。`GET /api/state`、`POST /api/state`、`GET /health`。以前の公開準備で本番保存・同一requestId再送・旧revision409を検証済み。保存確認はupdatedAtのみ変更し、業務数値は変更していない。
+- Pages workflow はNode.js 24で全回帰テストを実行後、`data/state.json` を静的fallbackに含めて公開する。API URLと既存Pages originを維持する。
+- 残作業: 対象commitを公開し、Pages Action成功を確認。公開URLでPC・スマホの読取専用ブラウザQAを行う。ローカルブラウザの接続制約により、この最終画面確認は公開後に実施する。
+- 公開先: https://usukura-p.github.io/conversion-design-q3-2026/ 。repo: https://github.com/usukura-P/conversion-design-q3-2026 。ブランチ: `codex/3q-dashboard`。

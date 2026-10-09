@@ -17,35 +17,32 @@ APIは全schemaを検証し、baselineを変更不可にする。Git blob SHAの
 ## ローカル検証
 
 ```bash
-node --test server/*.test.mjs
+node --test server/*.test.mjs tests/*.test.mjs
 PORT=8080 node server/index.mjs
 ```
 
 `GET /health`、`GET /api/state`、`POST /api/state`。POSTはJSONの`{state, revision, requestId, editor}`、上限512KB。CORSは`https://usukura-p.github.io`およびhttp localhost/127.0.0.1だけを許可する。OriginなしのCLIアクセスも可能。これは認証として扱わない。
 
-## Cloud Run
+## 保存APIとフロント公開
 
-既存LP tracking環境の候補: project `axis-lp-tracking-20260806`、region `asia-northeast1`。既存LP tracking serviceを変更せず、新規`q3-progress-api`を使用する。
+保存APIはCloud Runで公開済み。今回のフロント公開では再デプロイや設定変更を行わない。
 
-2026-10-09の読取調査で、ユーザーaccount `usukura@shibuya-ad.com`は再認証が必要だった。代替の`persona-agent-sheets@persona-agent-481605.iam.gserviceaccount.com`はproject `persona-agent-481605`でrun.services.create/update/setIamPolicy、iam.serviceAccounts.actAs、cloudbuild.builds.create、storage.buckets.create権限を確認した。ただし親タスクでbilling disabledを確認したためそのprojectでは公開できない。Secret Managerは代替projectで無効で有効化権限なし。ADCも未設定。認証・請求が利用可能なprojectを確認してから下記を実行する。
+- API: https://q3-progress-api-295429960025.asia-northeast1.run.app
+- フロント: https://usukura-p.github.io/conversion-design-q3-2026/
+- API契約: `SCHEMA.md`。フロント接続先: `public/config.json`。
 
-```bash
-gcloud run deploy q3-progress-api \
-  --project=axis-lp-tracking-20260806 \
-  --region=asia-northeast1 \
-  --source=. \
-  --allow-unauthenticated \
-  --port=8080 \
-  --min-instances=0 --max-instances=1 \
-  --memory=512Mi --cpu=1 --concurrency=20 \
-  --timeout=120 \
-  --env-vars-file=/dev/stdin
-```
+repo限定deploy keyはサーバー側のみで管理する。将来の再デプロイ時も既存の秘密設定を維持し、秘密値を読み出して表示したり公開ファイルへ含めたりしない。鍵の漏えい時はGitHub repo settingsで失効させる。
 
-上記のstdinは安全な子プロセスから秘密値を含むYAMLを渡す。コマンドラインに値を書かず、echoやツール出力でも表示しない。Secret Managerが利用可能なら専用secretに保管し`--set-secrets`で注入する。Git限定のdeploy keyは定期更新し、漏えい時はGitHub repo settingsから失効させる。
-
-完成したCloud Run URLを`public/config.json`のapiBaseに設定してGitHub Pagesへ公開する。APIの匿名IAM・CORSと公開ページからの保存→再読込を本番で確認する。Cloud Run初回保存はcheckout準備を伴う。
+公開originを維持する。別originに移行する場合はCORS設定の別途見直しが必要。Cloud Run初回保存はcheckout準備を伴う。
 
 ## 障害時・復元
 
 409や502時は端末の下書きを維持する。最新を読み込み、内容を照合して新しい保存を実行する。応答が途切れた保存の再試行は同じrequestId・同じ内容を使う。任意の過去データへ戻す際はGit履歴のstate.jsonを確認し、それを新しいcommitとして復元する。公開URLは保ち、Git履歴と重複防止台帳を消さない。
+
+## フロント公開前の回帰検証
+
+Pages workflow は Node.js 24 で `node --test server/*.test.mjs tests/*.test.mjs` が通ってから公開する。テストはローカルfixture／mockだけを使い、本番APIへ書き込まない。
+
+フロントの保存失敗・409・同一リクエスト再送・下書き再開・最新読込中の入力保護・XSSエスケープ・過去スナップショット・既存基準値の算術を検証対象に含める。公開時には対象commitのActions成功と公開URLを別途確認する。
+
+2026-10-09 JSTのクラウドQAでは61件成功・失敗0件。共有のstate.jsonは既存commitと同一で、3Q実績は未入力のまま。以前の公開準備で本番GET・POST・再送dedup・旧revision409を検証済みだが、今回のQAでは本番データを更新していない。公開後のPC・スマホ読取専用ブラウザQAは未実施。

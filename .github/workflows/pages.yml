@@ -1,0 +1,37 @@
+name: Publish dashboard
+on:
+  push:
+    branches: [codex/3q-dashboard]
+    paths: ['public/**', 'tests/**', 'server/**', 'data/state.json', '.github/workflows/pages.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Run regression tests
+        run: node --test server/*.test.mjs tests/*.test.mjs
+      - name: Include fallback snapshot
+        run: |
+          mkdir -p public/data
+          cp data/state.json public/data/state.json
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
