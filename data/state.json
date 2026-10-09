@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-09T04:15:27.400Z",
+  "updatedAt": "2026-10-09T04:38:47.761Z",
   "baseline": {
     "septemberRevenue": 554427123,
     "septemberCvr": 1.653647261445,
@@ -793,8 +793,8 @@
   "monthlyRevenue": [
     {
       "month": "2026-10",
-      "actual": null,
-      "asOf": null
+      "actual": 152951325,
+      "asOf": "2026-10-09"
     },
     {
       "month": "2026-11",
@@ -817,6 +817,66 @@
       "observedThrough": "2026-10-09",
       "metaCv": 0,
       "metaClicks": 23
+    },
+    {
+      "id": "axad-release-row-198",
+      "initiativeId": null,
+      "title": "★042_TCB-二重女性_3万円OFF_寒竹_フリップアンケ_ひかる_20261001",
+      "owner": "kantake",
+      "releaseDate": "2026-10-01",
+      "metaCv": 0,
+      "metaClicks": 54,
+      "observedThrough": "2026-10-09"
+    },
+    {
+      "id": "axad-release-row-199",
+      "initiativeId": null,
+      "title": "★010_DIO脱毛男性_11ヶ月分100円_青木_VIO・素材一貫性_20261001",
+      "owner": "aoki",
+      "releaseDate": "2026-10-01",
+      "metaCv": 21,
+      "metaClicks": 1262,
+      "observedThrough": "2026-10-09"
+    },
+    {
+      "id": "axad-release-row-200",
+      "initiativeId": null,
+      "title": "★012_TCB-鼻女性_最大無料_青木_正面BA追加_Eライン_20261002",
+      "owner": "aoki",
+      "releaseDate": "2026-10-02",
+      "metaCv": 24,
+      "metaClicks": 663,
+      "observedThrough": "2026-10-09"
+    },
+    {
+      "id": "axad-release-row-201",
+      "initiativeId": null,
+      "title": "★053_TCB-ピコレーザー女性_0円_中川_フリップアンケ_シミ肝斑_動画記事_20261002",
+      "owner": "nakagawa",
+      "releaseDate": "2026-10-02",
+      "metaCv": 54,
+      "metaClicks": 1965,
+      "observedThrough": "2026-10-09"
+    },
+    {
+      "id": "axad-release-row-202",
+      "initiativeId": null,
+      "title": "★041_TCB-ニキビ女性_0円_寒竹_記事検証_ひかる改修_20261002",
+      "owner": "kantake",
+      "releaseDate": "2026-10-02",
+      "metaCv": 1,
+      "metaClicks": 64,
+      "observedThrough": "2026-10-09"
+    },
+    {
+      "id": "axad-release-row-205",
+      "initiativeId": null,
+      "title": "★033_DIOクリニック女性_15ヶ月分100円_青木_CPA用_20261008",
+      "owner": "aoki",
+      "releaseDate": "2026-10-08",
+      "metaCv": 0,
+      "metaClicks": 18,
+      "observedThrough": "2026-10-09"
     }
   ],
   "initiatives": [],
@@ -887,30 +947,47 @@
         }
       ],
       "metrics": {
-        "asOf": null,
-        "teamCvr": null,
-        "previousWeekCvr": null,
-        "eligibleArticles": 0,
+        "asOf": "2026-10-09T04:08:59.000Z",
+        "teamCvr": 1.3706466374132487,
+        "previousWeekCvr": 0,
+        "eligibleArticles": 7,
         "unmeasurableArticles": 0,
         "dispatched": 0,
         "people": {
           "usukura": {
-            "cvr": null,
+            "cvr": 1.3706466374132487,
             "proposals": 0
           },
           "kantake": {
-            "cvr": null,
+            "cvr": 0.78125,
             "proposals": 0
           },
           "aoki": {
-            "cvr": null,
+            "cvr": 1.761311619613102,
             "proposals": 0
           },
           "nakagawa": {
-            "cvr": null,
+            "cvr": 2.7480916030534353,
             "proposals": 0
           }
-        }
+        },
+        "monthlyRevenue": [
+          {
+            "month": "2026-10",
+            "actual": 152951325,
+            "asOf": "2026-10-09"
+          },
+          {
+            "month": "2026-11",
+            "actual": null,
+            "asOf": null
+          },
+          {
+            "month": "2026-12",
+            "actual": null,
+            "asOf": null
+          }
+        ]
       }
     }
   ]
