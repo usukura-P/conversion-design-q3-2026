@@ -77,3 +77,22 @@ test('unsaved text does not enter shared weekly history',()=>{const h=harness();
 test('partial AXAD import is explicitly scoped and reference text is escaped',()=>{const h=harness();h.set('importStatus',{populationComplete:false,asOf:'2026-10-09',note:'6記事は公開日未確認 <img src=x onerror=alert(1)>',references:[]});h.api.render();const html=h.node('#main').innerHTML;assert.match(html,/登録分のみ/);assert.match(html,/参考明細と算出根拠はローカル/);assert.match(html,/&lt;img/);assert.doesNotMatch(html,/<img src=x/);assert.equal(h.api.get().state.articles.length,0);});
 
 test('numeric import does not turn unrecorded initiative counts into confirmed zero',()=>{const seed=model.initialState();seed.weeks[0].metrics.asOf='2026-10-09T04:08:59Z';seed.weeks[0].metrics.teamCvr=1.37;const h=harness(new Map(),seed);h.api.render();assert.match(h.node('#main').innerHTML,/優先度会議に上がった施策<\/span><strong><span class="unrecorded">未登録/);assert.match(h.api.history(),/立案 —件/);assert.match(h.api.dispatchChart(),/配信までの進捗が蓄積/);});
+
+test('AXAD revenue and its collection date remain visible without manual inputs',()=>{
+ const seed=model.initialState();seed.monthlyRevenue[0].actual=152951325;seed.monthlyRevenue[0].asOf='2026-10-09';const h=harness(new Map(),seed);h.api.render();const html=h.node('#main').innerHTML;
+ assert.match(html,/1\.53/);assert.match(html,/10\/9時点/);assert.match(html,/AXAD.*週次/);assert.doesNotMatch(html,/data-path="monthlyRevenue\./);assert.doesNotMatch(html,/この月の売上を保存|実績を入力/);assert.deepEqual(h.api.get().state.monthlyRevenue,seed.monthlyRevenue);
+});
+
+test('missing AXAD revenue is described as uncollected rather than a request for input',()=>{
+ const h=harness();h.api.render();const html=h.node('#main').innerHTML;assert.match(html,/未集計/);assert.doesNotMatch(html,/実績を入力|売上の入力|未入力は描画/);
+});
+
+test('strategy section and navigation are removed while saved qualitative history survives',()=>{
+ const seed=model.initialState();seed.weeks[0].qualitative[0].evidence='既存の証拠を保持';const h=harness(new Map(),seed);h.api.render();const html=h.node('#main').innerHTML;
+ assert.doesNotMatch(html,/id="strategy"|戦略と仕組み/);const index=readFileSync(new URL('../public/index.html',import.meta.url),'utf8');assert.doesNotMatch(index,/href="#strategy"|戦略と仕組み/);assert.match(html,/既存の証拠を保持/);assert.match(html,/<span class="number">04<\/span>施策の進行/);assert.deepEqual(h.api.get().state.weeks[0].qualitative,seed.weeks[0].qualitative);
+});
+
+test('historical revenue keeps its snapshot and has no manual entry controls',()=>{
+ const seed=model.initialState();seed.weeks[0].metrics.monthlyRevenue=[{month:'2026-10',actual:100000000,asOf:'2026-10-08'}];seed.weeks.push(model.createWeek('2026-10-19'));seed.monthlyRevenue[0].actual=200000000;const h=harness(new Map(),seed);h.api.render();const html=h.node('#main').innerHTML;
+ assert.match(html,/1\.00<small>億円/);assert.match(html,/10\/8時点/);assert.match(html,/保存時点のAXAD実績/);assert.doesNotMatch(html,/data-path="monthlyRevenue\.|売上の入力/);assert.deepEqual(h.api.get().state.weeks[0].metrics.monthlyRevenue,seed.weeks[0].metrics.monthlyRevenue);
+});
