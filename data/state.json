@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-09T04:38:47.761Z",
+  "updatedAt": "2026-10-09T07:06:45.988Z",
   "baseline": {
     "septemberRevenue": 554427123,
     "septemberCvr": 1.653647261445,
@@ -793,7 +793,7 @@
   "monthlyRevenue": [
     {
       "month": "2026-10",
-      "actual": 152951325,
+      "actual": 154584375,
       "asOf": "2026-10-09"
     },
     {
@@ -835,7 +835,7 @@
       "owner": "aoki",
       "releaseDate": "2026-10-01",
       "metaCv": 21,
-      "metaClicks": 1262,
+      "metaClicks": 1296,
       "observedThrough": "2026-10-09"
     },
     {
@@ -854,8 +854,8 @@
       "title": "★053_TCB-ピコレーザー女性_0円_中川_フリップアンケ_シミ肝斑_動画記事_20261002",
       "owner": "nakagawa",
       "releaseDate": "2026-10-02",
-      "metaCv": 54,
-      "metaClicks": 1965,
+      "metaCv": 55,
+      "metaClicks": 1981,
       "observedThrough": "2026-10-09"
     },
     {
@@ -947,15 +947,15 @@
         }
       ],
       "metrics": {
-        "asOf": "2026-10-09T04:08:59.000Z",
-        "teamCvr": 1.3706466374132487,
+        "asOf": "2026-10-09T06:59:45.297Z",
+        "teamCvr": 1.3684507772182595,
         "previousWeekCvr": 0,
         "eligibleArticles": 7,
         "unmeasurableArticles": 0,
         "dispatched": 0,
         "people": {
           "usukura": {
-            "cvr": 1.3706466374132487,
+            "cvr": 1.3684507772182595,
             "proposals": 0
           },
           "kantake": {
@@ -963,18 +963,18 @@
             "proposals": 0
           },
           "aoki": {
-            "cvr": 1.761311619613102,
+            "cvr": 1.7467599575442714,
             "proposals": 0
           },
           "nakagawa": {
-            "cvr": 2.7480916030534353,
+            "cvr": 2.7763755678950024,
             "proposals": 0
           }
         },
         "monthlyRevenue": [
           {
             "month": "2026-10",
-            "actual": 152951325,
+            "actual": 154584375,
             "asOf": "2026-10-09"
           },
           {
