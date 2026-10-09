@@ -76,3 +76,18 @@ API保存commit d5ae7225db5d089d8d0cca78aed550061e872262とGET読戻しが一致
 
 ### 境界・リスク・復旧
 週は月〜日、9月境界と月跨ぎ週の重複/欠落、null/0、クリック0、除外語、案件×番号照合、Meta限定、単純平均と合算比率の混同を検証。売上対象は承認済みTM1-1/TM1-2/TM1-3/TM2-1/TM2-2の全媒体。既存匿名API・権限・秘密は維持。週次AXAD更新は既存MCP取込を使用し、定期実行の新規設定は別途仕様を確認。未取得を0に置換しない。公開前に変更差分・秘密混入を確認し、必要時は今回commitを戻して復旧する。具体的な計算方法・05表示指標は確認中で、回答前に仮定して変更しない。
+
+## 2026-10-09 累計推移とAXAD表の確定仕様
+
+ユーザー回答: 1週目は1週目リリース記事、2週目は1・2週目リリース記事…と対象を累積する。記事CVR単純平均というKPI算式は維持し、9月は9/1〜当該週末リリース、3Qは10/1〜当該週末リリースの累計。各週のMeta原数は各記事リリース日〜その週末（最新はAXAD取得日）で取得する。9月末時点の原数を全週へ流用しない。9月参考から3Q開始時に対象が切り替わることを図と文言で明示。
+
+05は添付AXAD記事別パフォーマンス表に準拠: 記事名、消化金額、MCV、CV、売上、利益、ROAS、CPA、CPM、Imp、Clicks、CTR、CPC、MCVR、MCPA、CVR、実質CVR。担当・リリース/観測期間も把握できるよう保持。Metaのみの既存仕様を維持。合計行は原数を合算して比率を再算出（記事単純平均KPIと別）。CVRは画像のCV/MCV（例4/32=12.5%）、実質CVRはCV/Clicks（4/121≒3.3%）。分母0は算出不可。利益負値を保持。白いデザイン・横スクロールと固定記事名を使う。
+
+### 契約・分担
+- data worker: scripts/の再現取込・検算、public/axad-data.json（読取専用、必要な集計だけ）、data-import/根拠。9月確認22記事・10月7記事から累計週末原数と最新詳細をMCP SELECTで取得。過去未確認6候補は混入しない。既存baseline/month snapshotは保持。
+- frontend worker: public/app.js,index.html,style.css,axad-model.js（集計/表示の純関数）,関連tests。読み取り専用JSONを使う。匿名API state schemaは変更しない。全売上/CV/Clicks/観測日の数値手入力を表示から外し、記事名/担当/リリース日/関連施策と文章は編集できる。原数とメタデータが一致しない時は別記事の数値を出さず未照合表示。
+- coordinator: データ契約と独立レビュー、本番APIの最新7記事CV/Clicks/観測日と月売上のみ更新（最新metrics再計算）、既存文言/施策/過去週/baseline保持を検証。ルートの既存テスト、公開、実ブラウザPC/スマホ確認。
+
+公開JSONは {schemaVersion:1,asOf,fetchedAtJst,media:'META',populationComplete:false,articles:[{id,title,owner,projectName,articleNo,releaseDate,observedThrough,metrics:{spend,impressions,clicks,mcv,cv,revenue,profit}}],trend:{basis:'article_mean',september:[{releaseStart,releaseEnd,observedThrough,teamCvr,eligibleArticles,people:{usukura,kantake,aoki,nakagawa}}],quarter:[同型]},notes:[...]} とする。各people値はnumber|null、usukuraはteamCvr。sourceのみの記事除外を守る。NULL、不正、複数番号の除外は根拠と検算に記録し未取得を0にしない。参照データ未取得時はAXAD未取得として表示し、不正な詳細数値を合成しない。過去表示は対応する当時rawが無ければ最新rawを当時値に見せない。
+
+ロールバック: 新公開commitを戻し、既存API更新は更新前stateを読取り保全して対応項目だけ復旧。秘密・原票Chatwork本文・内部ソース/SQLは公開commitへ入れない。

@@ -1,0 +1,238 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-10-09",
+  "fetchedAtJst": "2026-10-09T15:59:45.297770+09:00",
+  "media": "META",
+  "populationComplete": false,
+  "articles": [
+    {
+      "id": "axad-20261007-tcb-fat-body-women-021",
+      "title": "★021_TCB-脂肪溶解からだ女性_最大無料_臼倉_フリップアンケ_新規_尿ドバドバ_20261007",
+      "owner": "usukura",
+      "projectName": "TCB-脂肪溶解からだ女性",
+      "articleNo": 21,
+      "releaseDate": "2026-10-07",
+      "observedThrough": "2026-10-09",
+      "metrics": {
+        "spend": 22815,
+        "impressions": 1092,
+        "clicks": 23,
+        "mcv": 7,
+        "cv": 0,
+        "revenue": 0,
+        "profit": -22815
+      }
+    },
+    {
+      "id": "axad-release-row-198",
+      "title": "★042_TCB-二重女性_3万円OFF_寒竹_フリップアンケ_ひかる_20261001",
+      "owner": "kantake",
+      "projectName": "TCB-二重女性",
+      "articleNo": 42,
+      "releaseDate": "2026-10-01",
+      "observedThrough": "2026-10-09",
+      "metrics": {
+        "spend": 32280,
+        "impressions": 5726,
+        "clicks": 54,
+        "mcv": 6,
+        "cv": 0,
+        "revenue": 0,
+        "profit": -32280
+      }
+    },
+    {
+      "id": "axad-release-row-199",
+      "title": "★010_DIO脱毛男性_11ヶ月分100円_青木_VIO・素材一貫性_20261001",
+      "owner": "aoki",
+      "projectName": "DIO脱毛男性",
+      "articleNo": 10,
+      "releaseDate": "2026-10-01",
+      "observedThrough": "2026-10-09",
+      "metrics": {
+        "spend": 363856,
+        "impressions": 67327,
+        "clicks": 1296,
+        "mcv": 278,
+        "cv": 21,
+        "revenue": 682000,
+        "profit": 318144
+      }
+    },
+    {
+      "id": "axad-release-row-200",
+      "title": "★012_TCB-鼻女性_最大無料_青木_正面BA追加_Eライン_20261002",
+      "owner": "aoki",
+      "projectName": "TCB-鼻女性",
+      "articleNo": 12,
+      "releaseDate": "2026-10-02",
+      "observedThrough": "2026-10-09",
+      "metrics": {
+        "spend": 311233,
+        "impressions": 77389,
+        "clicks": 663,
+        "mcv": 115,
+        "cv": 24,
+        "revenue": 387600,
+        "profit": 76367
+      }
+    },
+    {
+      "id": "axad-release-row-201",
+      "title": "★053_TCB-ピコレーザー女性_0円_中川_フリップアンケ_シミ肝斑_動画記事_20261002",
+      "owner": "nakagawa",
+      "projectName": "TCB-ピコレーザー女性",
+      "articleNo": 53,
+      "releaseDate": "2026-10-02",
+      "observedThrough": "2026-10-09",
+      "metrics": {
+        "spend": 734386,
+        "impressions": 135417,
+        "clicks": 1981,
+        "mcv": 653,
+        "cv": 55,
+        "revenue": 992750,
+        "profit": 258364
+      }
+    },
+    {
+      "id": "axad-release-row-202",
+      "title": "★041_TCB-ニキビ女性_0円_寒竹_記事検証_ひかる改修_20261002",
+      "owner": "kantake",
+      "projectName": "TCB-ニキビ女性",
+      "articleNo": 41,
+      "releaseDate": "2026-10-02",
+      "observedThrough": "2026-10-09",
+      "metrics": {
+        "spend": 24653,
+        "impressions": 7343,
+        "clicks": 64,
+        "mcv": 4,
+        "cv": 1,
+        "revenue": 21850,
+        "profit": -2803
+      }
+    },
+    {
+      "id": "axad-release-row-205",
+      "title": "★033_DIOクリニック女性_15ヶ月分100円_青木_CPA用_20261008",
+      "owner": "aoki",
+      "projectName": "DIOクリニック女性",
+      "articleNo": 33,
+      "releaseDate": "2026-10-08",
+      "observedThrough": "2026-10-09",
+      "metrics": {
+        "spend": 8550,
+        "impressions": 1948,
+        "clicks": 18,
+        "mcv": 0,
+        "cv": 0,
+        "revenue": 0,
+        "profit": -8550
+      }
+    }
+  ],
+  "trend": {
+    "basis": "article_mean",
+    "september": [
+      {
+        "releaseStart": "2026-09-01",
+        "releaseEnd": "2026-09-06",
+        "observedThrough": "2026-09-06",
+        "teamCvr": 1.1971538054561337,
+        "eligibleArticles": 6,
+        "people": {
+          "usukura": 1.1971538054561337,
+          "kantake": 2.1285997956911493,
+          "aoki": 0.0,
+          "nakagawa": 0.16025641025641024
+        }
+      },
+      {
+        "releaseStart": "2026-09-01",
+        "releaseEnd": "2026-09-13",
+        "observedThrough": "2026-09-13",
+        "teamCvr": 1.4040836782358732,
+        "eligibleArticles": 11,
+        "people": {
+          "usukura": 1.4040836782358732,
+          "kantake": 1.6898179824856294,
+          "aoki": 0.26666666666666666,
+          "nakagawa": 1.9061651863845137
+        }
+      },
+      {
+        "releaseStart": "2026-09-01",
+        "releaseEnd": "2026-09-20",
+        "observedThrough": "2026-09-20",
+        "teamCvr": 1.591175629393554,
+        "eligibleArticles": 15,
+        "people": {
+          "usukura": 1.591175629393554,
+          "kantake": 1.673509133439193,
+          "aoki": 1.0080737727753943,
+          "nakagawa": 1.9885711372916441
+        }
+      },
+      {
+        "releaseStart": "2026-09-01",
+        "releaseEnd": "2026-09-27",
+        "observedThrough": "2026-09-27",
+        "teamCvr": 1.5518554616052045,
+        "eligibleArticles": 18,
+        "people": {
+          "usukura": 1.5518554616052045,
+          "kantake": 1.6833510013519986,
+          "aoki": 0.927859970551463,
+          "nakagawa": 1.8822924863888604
+        }
+      },
+      {
+        "releaseStart": "2026-09-01",
+        "releaseEnd": "2026-09-30",
+        "observedThrough": "2026-09-30",
+        "teamCvr": 1.6842731982430437,
+        "eligibleArticles": 19,
+        "people": {
+          "usukura": 1.6842731982430437,
+          "kantake": 1.807768030347738,
+          "aoki": 1.0593174702903572,
+          "nakagawa": 2.0138786748848956
+        }
+      }
+    ],
+    "quarter": [
+      {
+        "releaseStart": "2026-10-01",
+        "releaseEnd": "2026-10-04",
+        "observedThrough": "2026-10-04",
+        "teamCvr": 1.33152834183762,
+        "eligibleArticles": 3,
+        "people": {
+          "usukura": 1.33152834183762,
+          "kantake": 0.9090909090909091,
+          "aoki": null,
+          "nakagawa": 2.176403207331042
+        }
+      },
+      {
+        "releaseStart": "2026-10-01",
+        "releaseEnd": "2026-10-09",
+        "observedThrough": "2026-10-09",
+        "teamCvr": 1.3684507772182595,
+        "eligibleArticles": 7,
+        "people": {
+          "usukura": 1.3684507772182595,
+          "kantake": 0.78125,
+          "aoki": 1.7467599575442714,
+          "nakagawa": 2.7763755678950024
+        }
+      }
+    ]
+  },
+  "notes": [
+    "登録記事を対象に集計。9月には実リリース・担当範囲が未確認の6候補があり、網羅性は未確定。",
+    "9月は9/1以降、3Qは10/1以降リリース記事を各週まで累計。原数はリリース日〜各週の観測終端。最新日は当日途中。",
+    "9月の累計推移は9/25確認3記事を加えた22記事。固定比較値の9月1.65%・2Q2.22%は従来73記事の対象を保持している。"
+  ]
+}
