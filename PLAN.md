@@ -119,3 +119,11 @@ User asks to tighten each metric column. Reduce current1980px fixed table with ~
 
 ## 2026-10-13 Remove left menu
 User removes the entire left menu. Delete sidebar markup and its nav bindings/observer; workspace uses full available width. Preserve current Japanese datetime by showing the existing header clock on desktop as well as mobile. Keep week folds/content/data/API unchanged. Files index/app/style plus only impacted existing tests; cache20261013-4. Verify no sidebar/left gutter, current clock visible, no boot null errors and week folds work at desktop/mobile.
+
+## 2026-10-13 Article row review dropdown
+User wants article title + metrics unchanged and each row expandable into Result/Analysis/Next text inputs. Follow prior layout-first instruction: three fields are browser-local drafts for now, clearly labelled, not sent to current strict API schema.
+- Each real article row toggles a detail row below, button/keyboard accessible; totals do not expand. Keep compact17 metric columns and readonly math.
+- Three textareas below same row. Drafts scoped by report week + article id, autosaved locally and survive close/reopen/render/reload; escape content and tolerate malformed/unavailable storage. No new article/state fields sent to API.
+- Existing separate duplicate article metadata accordions below table move into optional basic-info disclosure inside expanded row, preserving existing edit/save scopes. Same behavior for whole-Q3 table, unique DOM ids.
+- Expanded editor width matches visible table wrapper even when table horizontally scrolls; stack fields on small screens. Preserve fixed article name and every number.
+- Files app.js/style.css/index cache20261013-5 and meaningful persistence/toggle tests. API/model/schema/data/GCloud/Sites deferred and untouched. Verify first/second independent rows, same article views, local persistence, no expansion on total, no clipping at PC/mobile, no unintended POST.
