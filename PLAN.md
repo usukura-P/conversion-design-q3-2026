@@ -113,3 +113,6 @@ Replace per-section folding plan with week-level accordions, labelled month/week
 
 ## 2026-10-13 Remove initiative section
 User explicitly removed 04 施策の進行. Remove its rendered section and navigation target, preserve stored initiatives and KPI calculations/API/schema. Clean references that describe that removed section. Files: app.js/index.html and only affected existing tests; cachev20261013-2. Validate no section/nav/add-initiative UI, existing article links and week folds intact. Rollback via UI commit; no data writes.
+
+## 2026-10-13 Compact article performance table
+User asks to tighten each metric column. Reduce current1980px fixed table with ~104px metric columns using compact count/rate columns and wider money columns, tighter cell/badge padding and row spacing. Keep all17 columns/numeric precision/read-only values/sticky article title/horizontal scroll. Target about1350-1450px total desktop width; count/rate about44-75px and money80-90px, mobile title stays readable. Modify CSS + minimum colgroup markup only if needed, index cachev20261013-3. Existing tests/checks only; DOM width/overflow + desktop/mobile screenshots. No API/data/layout grouping changes.
