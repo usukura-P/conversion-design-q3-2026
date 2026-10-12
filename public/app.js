@@ -7,7 +7,6 @@ let axadData=null;
 let state,sharedState,revision='',config={},activeWeek='',dirty=false,apiReady=false,offlineMessage='',editor='',savingKey='',syncing=false,blockDrafts={},availableDrafts=[];
 const editing=true;
 const weekDisclosureState=new Map();
-const SECTION_IDS=['overview','report','articles','members','history'];
 const DRAFT_KEY='article-team-q3-2026-blocks-v2-';
 const TAB_ID=crypto.randomUUID(),OWN_DRAFT_KEY=DRAFT_KEY+TAB_ID;
 const LEGACY_KEY='article-team-q3-2026-draft-v1';
@@ -260,10 +259,6 @@ function openWeek(id){
 main.addEventListener('toggle',event=>{
  const fold=event.target,id=fold.dataset.weekFold;if(id)weekDisclosureState.set(id,fold.open);
 },true);
-document.querySelector('.sidebar nav').addEventListener('click',event=>{
- const link=event.target.closest('a[href^="#"]');if(!link)return;const id=link.getAttribute('href').slice(1);if(!SECTION_IDS.includes(id))return;
- event.preventDefault();if(id!=='overview')openWeek(state.weeks.map(w=>w.id).sort().at(-1));document.querySelector('#'+id)?.scrollIntoView({behavior:'smooth'});
-});
 main.addEventListener('input',event=>{
  const el=event.target;if(syncing||el.dataset.block===savingKey||blockDrafts[el.dataset.block]?.pendingSave)return;
  if(el.id==='editor-name'){editor=el.value;try{localStorage.setItem(DRAFT_KEY+'editor',editor);}catch{}storeDraft();return;}
@@ -320,5 +315,4 @@ function updateCurrentJst(){
  clearTimeout(clockTimer);clockTimer=setTimeout(updateCurrentJst,60000-now.getTime()%60000);
 }
 updateCurrentJst();
-const observer=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting)document.querySelectorAll('.sidebar nav a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+entry.target.id));},{rootMargin:'-10% 0px -70% 0px'});
-boot().then(()=>document.querySelectorAll('section[id]').forEach(s=>observer.observe(s)));
+boot();

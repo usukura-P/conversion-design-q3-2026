@@ -116,3 +116,6 @@ User explicitly removed 04 施策の進行. Remove its rendered section and navi
 
 ## 2026-10-13 Compact article performance table
 User asks to tighten each metric column. Reduce current1980px fixed table with ~104px metric columns using compact count/rate columns and wider money columns, tighter cell/badge padding and row spacing. Keep all17 columns/numeric precision/read-only values/sticky article title/horizontal scroll. Target about1350-1450px total desktop width; count/rate about44-75px and money80-90px, mobile title stays readable. Modify CSS + minimum colgroup markup only if needed, index cachev20261013-3. Existing tests/checks only; DOM width/overflow + desktop/mobile screenshots. No API/data/layout grouping changes.
+
+## 2026-10-13 Remove left menu
+User removes the entire left menu. Delete sidebar markup and its nav bindings/observer; workspace uses full available width. Preserve current Japanese datetime by showing the existing header clock on desktop as well as mobile. Keep week folds/content/data/API unchanged. Files index/app/style plus only impacted existing tests; cache20261013-4. Verify no sidebar/left gutter, current clock visible, no boot null errors and week folds work at desktop/mobile.
