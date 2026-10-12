@@ -110,3 +110,6 @@ User requested all weekly sections be collapsible, duplicate field headings remo
 
 ### User clarified the grouping
 Replace per-section folding plan with week-level accordions, labelled month/week ordinal and date range. Open each week to see its own team report, initiatives/article/member sections. Overview stays above the list. Only real stored weeks, newest first, latest initially open; previous weeks can open/close independently. No fabrication of historical initiatives without snapshots; preserve old saved team/member/metric content. Keep duplicate-label and issue-removal changes. Week-number convention asked; wait on label choice while implementing structural changes. Existing saved state/API remain unchanged.
+
+## 2026-10-13 Remove initiative section
+User explicitly removed 04 施策の進行. Remove its rendered section and navigation target, preserve stored initiatives and KPI calculations/API/schema. Clean references that describe that removed section. Files: app.js/index.html and only affected existing tests; cachev20261013-2. Validate no section/nav/add-initiative UI, existing article links and week folds intact. Rollback via UI commit; no data writes.
