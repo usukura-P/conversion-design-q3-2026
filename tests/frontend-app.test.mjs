@@ -8,7 +8,7 @@ import {validateState} from '../server/validation.mjs';
 const source=readFileSync(new URL('../public/app.js',import.meta.url),'utf8').replace(/^import .*?;\n/gm,'').replace(/boot\(\)\.then\([^\n]+\);\s*$/,'');
 function harness(storage=new Map(),seed=model.initialState()){
  const nodes=new Map(),fields=[],windows={};
- const element=()=>({disabled:false,style:{},dataset:{},classList:{toggle(){},add(){},remove(){}},listeners:{},addEventListener(type,fn){this.listeners[type]=fn;},querySelector(sel){return sel==='input:invalid'?null:node(sel);},querySelectorAll(sel){return sel==='[data-block]'?fields:[];},focus(){},scrollIntoView(){},matches(){return false;}});
+ const element=()=>({disabled:false,style:{},dataset:{},classList:{toggle(){},add(){},remove(){}},listeners:{},addEventListener(type,fn){this.listeners[type]=fn;},querySelector(sel){return sel==='input:invalid'?null:node(sel);},querySelectorAll(sel){return sel==='[data-block]'?fields:[];},focus(){},scrollIntoView(options){this.scrolled=options;},matches(){return false;}});
  function node(s){if(!nodes.has(s))nodes.set(s,element());return nodes.get(s);}
  const localStorage={setItem(k,v){storage.set(k,v);},getItem(k){return storage.get(k)||null;},removeItem(k){storage.delete(k);},get length(){return storage.size;},key(i){return [...storage.keys()][i]}};
  const ctx=vm.createContext({...model,...axadModel,structuredClone,Intl,Date,URL,Blob,AbortController,crypto:globalThis.crypto,console,setTimeout:()=>1,clearTimeout(){},confirm:()=>true,document:{querySelector:node,querySelectorAll:()=>[],body:element()},window:{addEventListener(t,f){windows[t]=f;}},IntersectionObserver:class{observe(){}},localStorage,seed});
@@ -73,7 +73,7 @@ test('a saved historical field does not replace its old snapshots',async()=>{
 });
 test('every app import exists in shipped model',()=>{for(const name of readFileSync(new URL('../public/app.js',import.meta.url),'utf8').match(/^import \{([^}]+)\}/)[1].split(',').map(x=>x.trim()))assert.ok(name in model,name);});
 
-test('unsaved text does not enter shared weekly history',()=>{const h=harness();h.input('weeks.0.team.status','unshared private draft');assert.doesNotMatch(h.api.history(),/unshared private draft/);});
+test('unsaved report text is shown for editing but never enters the saved weekly summary',()=>{const h=harness();h.input('weeks.0.team.status','unshared private draft');const html=h.api.history();assert.doesNotMatch(html.match(/<summary>[\s\S]*?<\/summary>/)[0],/unshared private draft/);assert.match(html,/unshared private draft/);assert.equal(h.api.get().sharedState.weeks[0].team.status,'');});
 
 test('partial AXAD import stays scoped without displaying the removed import notice',()=>{const h=harness();h.set('importStatus',{populationComplete:false,asOf:'2026-10-09',note:'6記事は公開日未確認 <img src=x onerror=alert(1)>',references:[]});h.api.render();const html=h.node('#main').innerHTML;assert.match(html,/登録分のみ/);assert.doesNotMatch(html,/参考明細と算出根拠はローカル|AXAD取得 ·/);assert.doesNotMatch(html,/<img src=x/);assert.equal(h.api.get().state.articles.length,0);});
 
@@ -95,7 +95,7 @@ test('strategy section and navigation are removed while saved qualitative histor
 
 test('historical revenue keeps its snapshot and has no manual entry controls',()=>{
  const seed=model.initialState();seed.weeks[0].metrics.monthlyRevenue=[{month:'2026-10',actual:100000000,asOf:'2026-10-08'}];seed.weeks.push(model.createWeek('2026-10-19'));seed.monthlyRevenue[0].actual=200000000;const h=harness(new Map(),seed);h.api.render();const html=h.node('#main').innerHTML;
- assert.match(html,/1\.00<small>億円/);assert.match(html,/10\/8時点/);assert.match(html,/保存時点のAXAD実績/);assert.doesNotMatch(html,/data-path="monthlyRevenue\.|売上の入力/);assert.deepEqual(h.api.get().state.weeks[0].metrics.monthlyRevenue,seed.weeks[0].metrics.monthlyRevenue);
+ assert.match(html,/10月 1\.00億円/);assert.match(html,/10\/8時点/);assert.match(html,/集計/);assert.doesNotMatch(html,/data-path="monthlyRevenue\.|売上の入力/);assert.deepEqual(h.api.get().state.weeks[0].metrics.monthlyRevenue,seed.weeks[0].metrics.monthlyRevenue);
 });
 
 function performanceSeed(){const seed=model.initialState();seed.articles=[{id:'axad-203',title:'検証記事',owner:'usukura',releaseDate:'2026-10-07',observedThrough:'2026-10-09',metaCv:4,metaClicks:121,initiativeId:null}];seed.weeks[0].metrics.asOf='2026-10-09T04:00:00Z';seed.weeks[0].metrics.teamCvr=1.3;return seed;}
@@ -151,4 +151,22 @@ test('legacy numeric conflicts do not block metadata while title conflicts still
 
 test('saving a newer report week does not invent a later AXAD observation point or alter old metrics',async()=>{
  const seed=performanceSeed();seed.weeks.push(model.createWeek('2026-10-19'));const old=structuredClone(seed.weeks[0].metrics),h=harness(new Map(),seed),net=mockApi(h,seed);h.ctx.Date=class extends Date{constructor(value){super(value===undefined?'2026-10-19T00:00:00Z':value);}};await h.api.saveBlock(h.input('weeks.1.team.status','新しい報告'));assert.deepEqual(net.get().weeks[0].metrics,old);assert.equal(net.get().weeks[1].metrics.asOf,'2026-10-09T04:00:00.000Z');const points=axadModel.trendPoints(null,net.get().weeks);assert.equal(points.length,1);assert.equal(points[0].observedThrough,'2026-10-09');assert.equal(points[0].week,'2026-10-12');
+});
+
+
+test('only real weeks appear, newest starts open and opening another week keeps separate drafts',()=>{
+ const seed=model.initialState();seed.weeks.push(model.createWeek('2026-10-19'));const h=harness(new Map(),seed);h.api.render();let html=h.node('#main').innerHTML;assert.match(html,/data-week-fold="2026-10-19" open/);assert.match(html,/data-week-fold="2026-10-12" >/);assert.equal((html.match(/data-week-fold=/g)||[]).length,2);assert.ok(html.indexOf('id="overview"')<html.indexOf('data-week-fold='));assert.doesNotMatch(html,/id="week-selector"|data-section-fold=/);assert.match(html,/10月第3週/);assert.match(html,/10\/12〜10\/18/);
+ h.input('weeks.0.team.change','過去週の下書き');h.input('weeks.1.team.change','最新週の下書き');h.node('#main').listeners.toggle({target:{dataset:{weekFold:'2026-10-12'},open:true}});h.node('#main').listeners.toggle({target:{dataset:{weekFold:'2026-10-19'},open:false}});h.api.render();html=h.node('#main').innerHTML;assert.match(html,/data-week-fold="2026-10-12" open/);assert.match(html,/data-week-fold="2026-10-19" >/);assert.equal(h.api.get().state.weeks[0].team.change,'過去週の下書き');assert.equal(h.api.get().state.weeks[1].team.change,'最新週の下書き');h.node('#main').listeners.toggle({target:{dataset:{weekFold:'2026-10-19'},open:true}});h.api.render();assert.match(h.node('#main').innerHTML,/最新週の下書き/);
+});
+test('sidebar navigation opens the latest week before scrolling to its unique target',()=>{
+ const seed=model.initialState();seed.weeks.push(model.createWeek('2026-10-19'));const h=harness(new Map(),seed);h.api.render();h.node('#main').listeners.toggle({target:{dataset:{weekFold:'2026-10-19'},open:false}});h.node('#week-2026-10-19').open=false;let prevented=false;h.node('.sidebar nav').listeners.click({target:{closest:()=>({getAttribute:()=>'#report'})},preventDefault(){prevented=true;}});assert.equal(prevented,true);assert.equal(h.node('#week-2026-10-19').open,true);assert.equal(h.node('#report').scrolled.behavior,'smooth');h.api.render();const html=h.node('#main').innerHTML;assert.match(html,/data-week-fold="2026-10-19" open/);assert.equal((html.match(/id="report"/g)||[]).length,1);assert.match(html,/id="report-2026-10-12"/);
+});
+test('add button creates a draft inside the latest week without altering week disclosure states',async()=>{
+ const h=harness();h.api.render();h.input('weeks.0.team.requests','未保存の相談');await h.click('add-initiative');assert.match(h.node('#main').innerHTML,/data-week-fold="2026-10-12" open/);assert.equal(h.api.get().state.initiatives.length,1);assert.equal(h.api.get().state.weeks[0].team.requests,'未保存の相談');
+});
+test('team report has four single labels and hides issues while retaining the original state',()=>{
+ const seed=model.initialState();seed.weeks[0].team.issues='保存済みの記事課題';const h=harness(new Map(),seed),html=h.api.report(seed.weeks[0],0);for(const label of ['今の状態・結論','前週からの変化・その理由','今週の優先事項','PC局への相談・判断依頼'])assert.equal(html.split(label).length-1,1,label);for(const field of ['status','change','priorities','requests'])assert.match(html,new RegExp('data-path="weeks.0.team.'+field+'"'));assert.doesNotMatch(html,/記事が課題|案件課題|team\.issues/);assert.doesNotMatch(h.api.history(),/保存済みの記事課題|案件課題/);assert.equal(h.api.get().state.weeks[0].team.issues,'保存済みの記事課題');
+});
+test('past weeks display saved measurements and never reuse current global initiative or article tables',()=>{
+ const seed=performanceSeed();seed.weeks.push(model.createWeek('2026-10-19'));const h=harness(new Map(),seed);h.set('axadData',performanceData(seed));h.api.render();const html=h.node('#main').innerHTML,past=html.slice(html.indexOf('id="week-2026-10-12"'));assert.match(past,/施策と記事の当時の詳細データは未保存/);assert.match(past,/保存時のCVR/);assert.match(past,/data-path="weeks.0.members.aoki.reflection"/);assert.doesNotMatch(past,/performance-table|data-action="add-article"|id="articles"|id="members"/);assert.equal((html.match(/id="articles"/g)||[]).length,1);assert.equal((html.match(/id="members"/g)||[]).length,1);
 });

@@ -99,3 +99,14 @@ API保存commit d5ae7225db5d089d8d0cca78aed550061e872262とGET読戻しが一致
 - 変更対象: public/index.html, public/app.js, public/style.css。既存frontendテストが構成に依存する場合のみ最小調整。
 - 検証: JS全テスト、構文/差分、公開PC・390px画面。日時がAXAD集計日や保存日時と混同されない文言とする。
 - リスク/戻し方: DOM参照/スマホsidebar非表示に注意。既存API/データは変更せず、UIコミットのrevertで復旧可。
+
+## 2026-10-13 Weekly layout revision
+User requested all weekly sections be collapsible, duplicate field headings removed from team report, and the article-issue field removed because it is no longer tracked.
+- Add native disclosure controls to the main section headings (01/02/04/05/06/07), preserving existing initial visibility but allowing every section to close. Keep nested history week disclosures and old data.
+- Team report keeps status/change/priorities/requests, each label once. Remove issues input and its heading from current report, preserving schema/saved data. Hide issue display in history as it is no longer tracked.
+- Disclosure state must survive app rerender; reopening must preserve unsaved drafts. Sidebar navigation should open its target before scrolling. Add buttons must remain independently operable without accidental folding.
+- Files: public/app.js, style.css, index.html cache version; existing frontend tests only where behavior/markup requires updates, meaningful disclosure tests when needed. API/model/metrics/Sites unchanged.
+- Verify initial/closed/reopened/following rerender, sidebar links, nested old-week folds, edit labels, PC and narrow display. Local preview first; public UI update after checks. Rollback: revert UI commit, no data write.
+
+### User clarified the grouping
+Replace per-section folding plan with week-level accordions, labelled month/week ordinal and date range. Open each week to see its own team report, initiatives/article/member sections. Overview stays above the list. Only real stored weeks, newest first, latest initially open; previous weeks can open/close independently. No fabrication of historical initiatives without snapshots; preserve old saved team/member/metric content. Keep duplicate-label and issue-removal changes. Week-number convention asked; wait on label choice while implementing structural changes. Existing saved state/API remain unchanged.
