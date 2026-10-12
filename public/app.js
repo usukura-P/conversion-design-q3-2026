@@ -4,6 +4,7 @@ import { performanceMetrics, sumRawMetrics, matchAxadArticle, trendPoints, jstOb
 const main=document.querySelector('#main');
 let importStatus=null;
 let axadData=null;
+let articleLinks=null;
 let state,sharedState,revision='',config={},activeWeek='',dirty=false,apiReady=false,offlineMessage='',editor='',savingKey='',syncing=false,blockDrafts={},availableDrafts=[];
 const editing=true;
 const weekDisclosureState=new Map();
@@ -147,13 +148,19 @@ function articleReviewPanel(a,idx,week,view){
  const key=keyFor([week.id,a.id]),draft=articleReviewDraft(key),id='article-review-'+view+'-'+encodeURIComponent(week.id)+'-'+encodeURIComponent(a.id);
  return `<tr class="performance-review-row" data-review-panel="${e(key)}" ${openArticleReviews.has(key)?'':'hidden'}><td colspan="17" class="performance-review-cell"><div id="${e(id)}" class="article-review-panel" role="region" aria-label="${e(a.title)||'新しい記事'}の振り返り"><p class="local-review-status ${draft.error?'error':''}" data-review-status="${e(key)}" role="status">${e(reviewDraftStatus(draft))}</p><div class="review-fields">${REVIEW_FIELDS.map(([field,label])=>`<label class="form-field" for="local-note-${e(id)}-${field}"><span>${label}</span><textarea id="local-note-${e(id)}-${field}" data-review-key="${e(key)}" data-review-field="${field}" rows="3" maxlength="6000" placeholder="${label}を記入">${e(draft.fields[field])}</textarea></label>`).join('')}</div>${articleDetails(a,idx,week)}</div></td></tr>`;
 }
+function articleTitleUrl(article){
+ if(articleLinks?.schemaVersion!==1||!Array.isArray(articleLinks.articles))return null;
+ const matches=articleLinks.articles.filter(row=>row?.id===article.id&&row?.title===article.title);
+ return matches.length===1&&typeof matches[0].url==='string'&&safeUrl(matches[0].url)?matches[0].url:null;
+}
 function performanceTable(rows,week,label,view='previous'){
  const evaluated=rows.map(({a,idx})=>({a,idx,match:articleMatch(a,week)}));
  if(!evaluated.length)return '<div class="empty-state"><strong>対象期間の記事はまだ登録されていません。</strong><p>AXAD取得後に記事別の数値を表示します。</p></div>';
  const totals=performanceMetrics(sumRawMetrics(evaluated.map(r=>r.match.raw)));
  return `<div class="table-wrap performance-wrap" tabindex="0" aria-label="${e(label)}。横にスクロールして全指標を確認できます。"><table class="data-table performance-table"><colgroup><col class="article-column">${PERFORMANCE_COLUMNS.map(([key])=>`<col class="metric-${key}">`).join('')}</colgroup><thead><tr><th>記事名</th>${PERFORMANCE_COLUMNS.map(([,name])=>`<th>${name}</th>`).join('')}</tr></thead><tbody>${evaluated.map(({a,idx,match})=>{
   const key=keyFor([week.id,a.id]),id='article-review-'+view+'-'+encodeURIComponent(week.id)+'-'+encodeURIComponent(a.id);if(!a.title)openArticleReviews.add(key);
-  return `<tr class="performance-article-row" data-review-row="${e(key)}"><td class="title-cell sticky-title"><button type="button" class="article-review-toggle" data-action="toggle-review" data-review-key="${e(key)}" aria-expanded="${openArticleReviews.has(key)}" aria-controls="${e(id)}"><strong>${e(a.title)||'記事名未記入'}</strong></button><small>${e(person(a.owner).name)} · ${shortDate(a.releaseDate)}リリース</small><small>${match.status==='matched'?`観測 ${shortDate(a.releaseDate)}〜${shortDate(match.source.observedThrough)}`:`<span class="pill gray">${match.status==='historical_missing'?'当時詳細未取得':match.status==='unmatched'?'未照合':'AXAD詳細未取得'}</span>`}</small></td>${performanceCells(performanceMetrics(match.raw))}</tr>${articleReviewPanel(a,idx,week,view)}`;
+  const url=articleTitleUrl(a),title=e(a.title)||'記事名未記入';
+  return `<tr class="performance-article-row" data-review-row="${e(key)}"><td class="title-cell sticky-title"><div class="article-title-line"><button type="button" class="article-review-toggle" data-action="toggle-review" data-review-key="${e(key)}" aria-label="${title}の振り返りを開閉" aria-expanded="${openArticleReviews.has(key)}" aria-controls="${e(id)}"><span class="review-chevron" aria-hidden="true"></span></button>${url?`<a class="article-title-link" href="${e(url)}" target="_blank" rel="noopener noreferrer"><strong>${title}</strong></a>`:`<strong class="article-title-plain">${title}</strong>`}</div></td>${performanceCells(performanceMetrics(match.raw))}</tr>${articleReviewPanel(a,idx,week,view)}`;
  }).join('')}</tbody><tfoot><tr><td class="sticky-title"><strong>合計</strong><small>原数合算から比率を再算出</small></td>${performanceCells(totals)}</tr></tfoot></table></div>`;
 }
 function articleSection(week){
@@ -199,7 +206,7 @@ function conflictPanel(){
 }
 function render(){
  const latest=[...state.weeks].sort((a,b)=>b.id.localeCompare(a.id))[0];activeWeek=latest.id;const week=latest;document.body.classList.add('block-editing');
- main.innerHTML=`<div class="week-toolbar"><button class="button small edit-only" data-action="show-week-form">＋ 週を追加</button></div>${alerts()}${!sharedState.weeks.some(w=>w.id===week.id)?`<div class="alert">この週はまだ共有されていません。${blockActions(['weeks',{key:'id',id:week.id}],'この週を共有')}</div>`:''}${activeWeek!==latest.id?'<div class="alert archive-notice">過去週を表示しています。過去週の文章を編集できます。集計値は当時のスナップショットを保持します。</div>':''}<div class="editor-row"><label for="editor-name">更新者</label><input class="simple" id="editor-name" value="${e(editor)}" placeholder="名前を記入" maxlength="80"><span class="edit-warning">下書きはタブごと・欄ごとに保管。その欄の保存ボタンで共有します。</span><button class="text-link align-end" data-action="download-draft">下書きをダウンロード</button></div><div id="new-week-form" class="week-form" hidden><label for="new-week-date" class="subtle">報告週の月曜日</label><input type="date" class="simple" id="new-week-date" value="${nextMonday(latest.id)}"><button class="button small primary" data-action="add-week">週を作成</button><button class="button small" data-action="hide-week-form">閉じる</button></div>${overview(week)}${history()}`;
+ main.innerHTML=`<div class="week-toolbar"><button class="button small edit-only" data-action="show-week-form">＋ 週を追加</button></div>${alerts()}${!sharedState.weeks.some(w=>w.id===week.id)?`<div class="alert">この週はまだ共有されていません。${blockActions(['weeks',{key:'id',id:week.id}],'この週を共有')}</div>`:''}${activeWeek!==latest.id?'<div class="alert archive-notice">過去週を表示しています。過去週の文章を編集できます。集計値は当時のスナップショットを保持します。</div>':''}<div id="new-week-form" class="week-form" hidden><label for="new-week-date" class="subtle">報告週の月曜日</label><input type="date" class="simple" id="new-week-date" value="${nextMonday(latest.id)}"><button class="button small primary" data-action="add-week">週を作成</button><button class="button small" data-action="hide-week-form">閉じる</button></div>${overview(week)}${history()}`;
  // hidden wins over author display rules for the optional add-week form.
  document.querySelector('#new-week-form').style.display='none';updateSaveStatus();
 }
@@ -239,10 +246,13 @@ async function refreshAxadData(){
   axadData=data;importStatus={asOf:data.asOf,fetchedAtJst:data.fetchedAtJst,populationComplete:data.populationComplete,note:(data.notes||[]).join(' ')};
  }}catch{}
 }
+async function refreshArticleLinks(){
+ articleLinks=null;try{const data=await request('./article-links.json');if(data.schemaVersion===1&&Array.isArray(data.articles))articleLinks=data;}catch{}
+}
 async function boot(){
  try{config=await request('./config.json');}catch{config={apiBase:'',repo:'usukura-P/conversion-design-q3-2026',branch:'codex/3q-dashboard'};}
  try{if(!config.apiBase)throw new Error('保存APIを準備中です。');const data=await apiGet();state=data.state;revision=data.revision;apiReady=true;}catch(err){apiReady=false;offlineMessage=err.message==='保存APIを準備中です。'?err.message:'保存サーバーとの通信に失敗しました。';try{state=await request('./data/state.json');}catch{try{state=await request(`https://raw.githubusercontent.com/${config.repo}/${config.branch}/data/state.json`);}catch(fallback){main.innerHTML=`<div class="error-page">進捗を読み込めませんでした。通信状態を確認して再読み込みしてください。<br>${e(fallback.message)}<br><button class="button" data-action="reload">再読み込み</button></div>`;return;}}}
- await refreshAxadData();
+ await refreshAxadData();await refreshArticleLinks();
  sharedState=structuredClone(state);activeWeek=[...state.weeks].sort((a,b)=>b.id.localeCompare(a.id))[0].id;try{editor=localStorage.getItem(DRAFT_KEY+'editor')||localStorage.getItem(LEGACY_KEY+'-editor')||'';}catch{}scanDrafts();
  render();
 }
@@ -251,7 +261,6 @@ async function saveBlock(key){
  preserveArticleMeasurements(draft,sharedState);if(draft.conflicts?.length)return;
  if(draft.path[0]==='monthlyRevenue'){draft.error='売上はAXAD取得で更新します。この古い下書きは保存できません。';storeDraft();toast(draft.error);return;}
  if(draft.pendingSave&&draft.axadGuardVersion!==1){draft.pendingSave=null;draft.error='古い保存内容の再送を止めました。AXADの最新値を保持して、もう一度この欄を保存してください。';storeDraft();render();return;}
- if(!editor.trim()){document.querySelector('#editor-name').focus();toast('更新者名を記入してください。');return;}
  savingKey=key;updateSaveStatus();
  try{
   if(!draft.pendingSave){
@@ -274,7 +283,7 @@ async function saveBlock(key){
     m.dispatched=currentCounts.dispatched;for(const p of PEOPLE)m.people[p.id].proposals=currentCounts.people[p.id].proposals;
    }
    if(!observedAt&&weekId===prepared.weeks.map(w=>w.id).sort().at(-1)){const m=prepared.weeks.find(w=>w.id===weekId).metrics;m.asOf=null;m.teamCvr=null;m.previousWeekCvr=null;m.eligibleArticles=0;m.unmeasurableArticles=0;for(const p of Object.values(m.people))p.cvr=null;}
-   draft.pendingSave={state:prepared,revision:fresh.revision,requestId:crypto.randomUUID(),editor:editor.trim()};draft.axadGuardVersion=1;storeDraft();
+   draft.pendingSave={state:prepared,revision:fresh.revision,requestId:crypto.randomUUID(),editor:typeof editor==='string'&&editor.trim()?editor.trim().slice(0,80):'記事チーム'};draft.axadGuardVersion=1;storeDraft();
   }
   const result=await request(config.apiBase.replace(/\/$/,'')+'/api/state',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(draft.pendingSave)});
   delete blockDrafts[key];acceptShared(result);draft.error='';offlineMessage='';toast('この欄を共有しました。他の未保存欄は下書きのままです。');render();
@@ -295,15 +304,14 @@ main.addEventListener('toggle',event=>{
 },true);
 main.addEventListener('input',event=>{
  const el=event.target;if(el.dataset.reviewField){saveArticleReviewInput(el);return;}if(syncing||el.dataset.block===savingKey||blockDrafts[el.dataset.block]?.pendingSave)return;
- if(el.id==='editor-name'){editor=el.value;try{localStorage.setItem(DRAFT_KEY+'editor',editor);}catch{}storeDraft();return;}
  if(!el.dataset.path)return;
  const path=JSON.parse(decodeURIComponent(el.dataset.valuePath));let value=el.value;if(el.dataset.type==='number')value=value===''?null:Number(value);else if(el.dataset.type==='date')value=value||null;if(path.at(-1)==='initiativeId')value=value||null;
  if(!setBlockValue(state,path,value)){toast('共有側で記録が削除されています。入力を下書きダウンロードに保管して確認してください。');return;}updateBlockFromInput(el.dataset.block);
 });
 main.addEventListener('change',event=>{if(syncing)return;if(event.target.matches('select[data-path]'))event.target.dispatchEvent(new Event('input',{bubbles:true}));});
-async function refreshShared(){if(savingKey||syncing)return;syncing=true;updateSaveStatus();try{if(!config.apiBase)config=await request('./config.json');const fresh=await apiGet();await refreshAxadData();acceptShared(fresh);apiReady=true;offlineMessage='';scanDrafts();render();toast('最新状態を確認しました。各欄の下書きは保持しています。');}catch(err){offlineMessage=`接続できませんでした：${err.message}`;render();}finally{syncing=false;updateSaveStatus();}}
+async function refreshShared(){if(savingKey||syncing)return;syncing=true;updateSaveStatus();try{if(!config.apiBase)config=await request('./config.json');const fresh=await apiGet();await refreshAxadData();await refreshArticleLinks();acceptShared(fresh);apiReady=true;offlineMessage='';scanDrafts();render();toast('最新状態を確認しました。各欄の下書きは保持しています。');}catch(err){offlineMessage=`接続できませんでした：${err.message}`;render();}finally{syncing=false;updateSaveStatus();}}
 main.addEventListener('click',async event=>{
- const button=event.target.closest('[data-action]');if(button?.dataset.action==='toggle-review'){toggleArticleReview(button.dataset.reviewKey);return;}const reviewRow=event.target.closest('[data-review-row]');if(reviewRow&&!event.target.closest('button,a,input,textarea,select,summary,details')){toggleArticleReview(reviewRow.dataset.reviewRow);return;}
+ const button=event.target.closest('[data-action]');if(button?.dataset.action==='toggle-review'){toggleArticleReview(button.dataset.reviewKey);return;}const reviewRow=event.target.closest('[data-review-row]');if(reviewRow&&!event.target.closest('button,a,input,textarea,select,summary,details,.article-title-line,.title-cell')){toggleArticleReview(reviewRow.dataset.reviewRow);return;}
  const jump=event.target.closest('[data-jump-week]');if(jump){openWeek(jump.dataset.jumpWeek);const d=document.querySelector('#week-'+jump.dataset.jumpWeek);if(d)d.open=true;return;}if(!button)return;
  const action=button.dataset.action,key=button.dataset.block;if(syncing||key===savingKey)return;
  if(action==='save-block'){await saveBlock(key);return;}
@@ -339,6 +347,7 @@ main.addEventListener('click',async event=>{
  if(action==='select-week'){openWeek(button.dataset.week);document.querySelector('#week-'+button.dataset.week)?.scrollIntoView({behavior:'smooth'});}
 });
 document.querySelector('#refresh-button').addEventListener('click',refreshShared);
+document.querySelector('#download-draft-button')?.addEventListener('click',downloadDraft);
 window.addEventListener('beforeunload',event=>{if(Object.keys(blockDrafts).length){event.preventDefault();event.returnValue='';}});
 window.addEventListener('storage',event=>{if(event.key?.startsWith(DRAFT_KEY)&&event.key!==OWN_DRAFT_KEY)scanDrafts();});
 let clockTimer=null;
