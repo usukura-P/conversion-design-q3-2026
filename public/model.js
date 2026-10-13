@@ -32,7 +32,7 @@ export function summarizeArticles(articles){
 }
 export function createWeek(monday){
  const {start,end}=previousWeek(monday);
- return {id:monday,releaseStart:start,releaseEnd:end,team:{status:'',change:'',issues:'',priorities:'',requests:''},members:Object.fromEntries(PEOPLE.map(p=>[p.id,{reflection:'',feedback:'',action:''}])),qualitative:QUALITATIVE.map(q=>({id:q.id,status:'not_started',evidence:'',next:''})),metrics:{asOf:null,teamCvr:null,previousWeekCvr:null,eligibleArticles:0,unmeasurableArticles:0,dispatched:0,people:Object.fromEntries(PEOPLE.map(p=>[p.id,{cvr:null,proposals:0}]))}};
+ return {id:monday,releaseStart:start,releaseEnd:end,articleReviews:[],team:{status:'',change:'',issues:'',priorities:'',requests:''},members:Object.fromEntries(PEOPLE.map(p=>[p.id,{reflection:'',feedback:'',action:''}])),qualitative:QUALITATIVE.map(q=>({id:q.id,status:'not_started',evidence:'',next:''})),metrics:{asOf:null,teamCvr:null,previousWeekCvr:null,eligibleArticles:0,unmeasurableArticles:0,dispatched:0,people:Object.fromEntries(PEOPLE.map(p=>[p.id,{cvr:null,proposals:0}]))}};
 }
 export function calculateMetrics(state,week,asOf=new Date().toISOString()){
  const cutoff=dateOnly(asOf);const articles=state.articles.filter(a=>inQuarter(a.releaseDate)&&a.releaseDate<=cutoff);const all=summarizeArticles(articles);
@@ -49,6 +49,13 @@ export function prepareSave(state,activeWeekId,asOf=new Date().toISOString()){
 export function initialState(){
  return {schemaVersion:1,updatedAt:null,baseline:{septemberRevenue:554427123,septemberCvr:null,q2Cvr:null,people:PEOPLE.map(p=>({id:p.id,name:p.name,septemberCvr:null,q2Cvr:null})),articles:[],sources:[],notes:['9月・2QのCVRは新集計条件で確認中']},monthlyRevenue:MONTHS.map(m=>({month:m.month,actual:null,asOf:null})),articles:[],initiatives:[],weeks:[createWeek('2026-10-12')]};
 }
+
+// Legacy weeks need an empty array parent, not a blank row per article.
+export function normalizeArticleReviews(state){
+ const copy=structuredClone(state);for(const week of copy.weeks)if(week.articleReviews===undefined)week.articleReviews=[];return copy;
+}
+export function emptyArticleReview(id){return {id,rating:'',result:'',analysis:'',next:''};}
+const isReviewRecordPath=path=>path.length===4&&path[0]==='weeks'&&path[2]==='articleReviews'&&path[3]?.key==='id';
 
 // Shared metadata and saved snapshots never come from an old local draft. Normalize
 // before comparing too, so snapshot-only drift cannot create deletion conflicts.
@@ -76,8 +83,11 @@ function conflictValue(state,path){
 
 // Three-way merge: preserve concurrent edits; conflicts require an explicit choice.
 export function mergeStates(base,mine,theirs){
+ base=normalizeArticleReviews(base);mine=normalizeArticleReviews(mine);theirs=normalizeArticleReviews(theirs);
  const conflicts=[];const sharedBase=withSharedSnapshots(base,base,theirs),sharedMine=withSharedSnapshots(mine,base,theirs);
  function merge(b,m,t,path){
+  // Two first reviews share a semantic blank base. Defaults are not edits.
+  if(b===undefined&&m&&t&&isReviewRecordPath(path))b=emptyArticleReview(path[3].id);
   if(sameMergeValue(m,b))return cloneMergeValue(t);if(sameMergeValue(t,b)||sameMergeValue(m,t))return cloneMergeValue(m);
   if(m&&t&&typeof m==='object'&&typeof t==='object'&&!Array.isArray(m)&&!Array.isArray(t)){
    const result={};for(const k of new Set([...Object.keys(b||{}),...Object.keys(m),...Object.keys(t)])){const value=merge(b?.[k],m[k],t[k],[...path,k]);if(value!==undefined)result[k]=value;}return result;
@@ -142,20 +152,20 @@ export function blockValue(state,path){return cloneMergeValue(conflictValue(stat
 export function setBlockValue(state,path,value){return applyConflictChoice(state,{path,mine:value,mineDelete:value===undefined},'mine');}
 export function makeBlockDraft(shared,path){return {path:structuredClone(path),baseState:structuredClone(shared),mine:blockValue(shared,path),conflicts:[],pendingSave:null,error:''};}
 export function mergeBlockDraft(draft,shared){
- const local=structuredClone(draft.baseState);
+ const base=normalizeArticleReviews(draft.baseState),local=structuredClone(base);shared=normalizeArticleReviews(shared);
  if(!setBlockValue(local,draft.path,draft.mine))return {state:structuredClone(shared),conflicts:[],parentMissing:true};
  // A colleague deleting a parent is not permission to restore its old contents.
  if(conflictValue(shared,draft.path.slice(0,-1))===undefined)return {state:structuredClone(shared),conflicts:[],parentMissing:true};
- const result=rebaseDraft(draft.baseState,local,shared,draft.conflicts||[]);
+ const result=rebaseDraft(base,local,shared,draft.conflicts||[]);
  return {...result,parentMissing:false};
 }
 export function overlayBlockDrafts(shared,drafts){
- const view=structuredClone(shared);
+ const view=normalizeArticleReviews(shared);
  for(const draft of Object.values(drafts))setBlockValue(view,draft.path,draft.mine);
  return view;
 }
 export function chooseBlockConflict(draft,index,choice){
- const local=structuredClone(draft.baseState);setBlockValue(local,draft.path,draft.mine);
+ const local=normalizeArticleReviews(draft.baseState);setBlockValue(local,draft.path,draft.mine);
  if(!applyConflictChoice(local,draft.conflicts[index],choice))return false;
  draft.mine=blockValue(local,draft.path);draft.conflicts.splice(index,1);draft.pendingSave=null;return true;
 }

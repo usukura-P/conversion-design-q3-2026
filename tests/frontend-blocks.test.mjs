@@ -30,3 +30,15 @@ test('new and deleted record scopes do not replace unrelated arrays',()=>{
  const base=initialState();base.initiatives=[{id:'old',title:'old'}];const add=makeBlockDraft(base,['initiatives',{key:'id',id:'new'}]);add.mine={id:'new',title:'new'};const fresh=structuredClone(base);fresh.initiatives.push({id:'other',title:'someone else'});let out=mergeBlockDraft(add,fresh);assert.equal(out.state.initiatives.length,3);
  const del=makeBlockDraft(fresh,['initiatives',{key:'id',id:'old'}]);del.mine=undefined;out=mergeBlockDraft(del,fresh);assert.deepEqual(out.state.initiatives.map(x=>x.id),['other']);
 });
+
+const reviewPath=['weeks',{key:'id',id:'2026-10-12'},'articleReviews',{key:'id',id:'one'}];
+const review=fields=>({id:'one',rating:'',result:'',analysis:'',next:'',...fields});
+test('legacy missing review array accepts first record and preserves unrelated snapshots',()=>{
+ const base=initialState();delete base.weeks[0].articleReviews;const draft=makeBlockDraft(base,reviewPath);draft.mine=review({result:'mine'});const out=mergeBlockDraft(draft,base);assert.equal(out.parentMissing,false);assert.equal(out.conflicts.length,0);assert.deepEqual(out.state.weeks[0].articleReviews,[review({result:'mine'})]);assert.deepEqual(out.state.weeks[0].metrics,base.weeks[0].metrics);assert.equal(base.weeks[0].articleReviews,undefined);
+});
+test('simultaneous first records merge edits over semantic empty defaults with field conflicts',()=>{
+ const base=initialState(),draft=makeBlockDraft(base,reviewPath);draft.mine=review({result:'mine'});const shared=structuredClone(base);shared.weeks[0].articleReviews=[review({analysis:'theirs'})];let out=mergeBlockDraft(draft,shared);assert.equal(out.conflicts.length,0);assert.deepEqual(out.state.weeks[0].articleReviews,[review({result:'mine',analysis:'theirs'})]);shared.weeks[0].articleReviews[0].result='other';out=mergeBlockDraft(draft,shared);assert.equal(out.conflicts.length,1);assert.equal(out.conflicts[0].path.at(-1),'result');assert.equal(out.conflicts[0].mine,'mine');assert.equal(out.conflicts[0].theirs,'other');
+});
+test('existing review deletion still conflicts with editing and missing week blocks save',()=>{
+ const base=initialState();base.weeks[0].articleReviews=[review({result:'old'})];const draft=makeBlockDraft(base,reviewPath);draft.mine.result='new';const shared=structuredClone(base);shared.weeks[0].articleReviews=[];const out=mergeBlockDraft(draft,shared);assert.equal(out.conflicts.length,1);assert.equal(out.conflicts[0].theirsDelete,true);shared.weeks=[];assert.equal(mergeBlockDraft(draft,shared).parentMissing,true);
+});

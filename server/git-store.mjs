@@ -1,5 +1,6 @@
 import {execFile} from 'node:child_process';import {promisify} from 'node:util';import {mkdtemp,mkdir,writeFile,readFile} from 'node:fs/promises';import {tmpdir} from 'node:os';import {join} from 'node:path';import {createHash} from 'node:crypto';import {isDeepStrictEqual} from 'node:util';
 import {ApiError,validateEnvelope,validateState} from './validation.mjs';import {REPO,BRANCH,STATE_PATH} from './github.mjs';
+import {preserveLegacyArticleReviews} from './state-compat.mjs';
 export function validKnownHosts(text){const lines=text.trim().split('\n');return lines.length===3&&lines.every(line=>/^github\.com,\[ssh\.github\.com\]:443 (ssh-ed25519|ssh-rsa|ecdsa-sha2-nistp256) [A-Za-z0-9+/=]+$/.test(line))&&new Set(lines.map(line=>line.split(' ')[1])).size===3;}
 const exec=promisify(execFile);const hash=v=>createHash('sha256').update(JSON.stringify(v)).digest('hex');
 export class GitStore {
@@ -15,7 +16,7 @@ export class GitStore {
  async get(){return this.lock(async()=>{await this.sync();return this.read();});}
  async save(body){validateEnvelope(body);return this.lock(async()=>{await this.sync();const current=await this.read(),fingerprint=hash(body);let log;try{log=await this.run(['log','--format=%H%n%B%x00','--',STATE_PATH]);}catch{throw new ApiError(502,'保存履歴を確認できません');}
   for(const entry of log.split('\0')){const match=entry.match(/\nQ3-Request: ([0-9a-f-]+) ([0-9a-f]{64})(?:\n|$)/i);if(match?.[1]===body.requestId){if(match[2]!==fingerprint)throw new ApiError(409,'この保存IDは別の内容です。新しい保存として実行してください');const commit=entry.trim().split('\n')[0];return {...current,commitUrl:`https://github.com/${REPO}/commit/${commit}`,updatedAt:current.state.updatedAt,deduplicated:true};}}
-  if(current.revision!==body.revision)throw new ApiError(409,'他の人が更新しました。下書きを残して最新を読み込んでください');validateState(body.state,current.state.baseline);const state=structuredClone(body.state);state.updatedAt=new Date().toISOString();
+  if(current.revision!==body.revision)throw new ApiError(409,'他の人が更新しました。下書きを残して最新を読み込んでください');validateState(body.state,current.state.baseline);const state=preserveLegacyArticleReviews(body.state,current.state);state.updatedAt=new Date().toISOString();
   try{await this.write(join(this.workdir,STATE_PATH),JSON.stringify(state,null,2)+'\n');await this.run(['add','--',STATE_PATH]);await this.run(['commit','-m',`週次の進捗を共有するため更新（${body.editor.replace(/[\r\n]/g,' ')}）\n\nQ3-Request: ${body.requestId} ${fingerprint}\n`]);}catch{throw new ApiError(502,'保存準備が完了しませんでした。下書きを保持してください');}
   const commit=await this.run(['rev-parse','HEAD']);try{await this.run(['push','origin',`HEAD:refs/heads/${BRANCH}`]);}catch{ // Resolve ambiguous transport failure without losing a committed retry.
    try{await this.run(['fetch','origin',BRANCH]);const remoteLog=await this.run(['log',`origin/${BRANCH}`,'--format=%B','--',STATE_PATH]);if(!remoteLog.includes(`Q3-Request: ${body.requestId} ${fingerprint}`))throw Error();}catch{throw new ApiError(409,'保存を確認できませんでした。別の更新や接続を確認し、下書きを保持してください');}

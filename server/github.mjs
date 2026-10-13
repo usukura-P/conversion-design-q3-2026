@@ -1,6 +1,7 @@
 import {createHash} from 'node:crypto';
 import {isDeepStrictEqual} from 'node:util';
 import {ApiError,validateEnvelope,validateState} from './validation.mjs';
+import {preserveLegacyArticleReviews} from './state-compat.mjs';
 export const REPO='usukura-P/conversion-design-q3-2026';
 export const BRANCH='codex/3q-dashboard';
 export const STATE_PATH='data/state.json';
@@ -25,7 +26,7 @@ export class GitHubStore {
   if(prior){if(prior.hash!==hash)throw new ApiError(409,'この保存IDは別の内容です。最新を読み込み、新しい保存として実行してください');return {...current,commitUrl:prior.commitUrl,updatedAt:current.state.updatedAt,deduplicated:true};}
   if(current.revision!==body.revision)throw new ApiError(409,'他の人が更新しました。下書きを残して最新を読み込んでください');
   validateState(body.state,current.state.baseline);
-  const state=structuredClone(body.state);state.updatedAt=new Date().toISOString();
+  const state=preserveLegacyArticleReviews(body.state,current.state);state.updatedAt=new Date().toISOString();
   const saved=await this.api(`/contents/${STATE_PATH}`,{method:'PUT',body:JSON.stringify({branch:BRANCH,sha:current.revision,message:`週次の進捗を共有するため更新（${body.editor.replace(/[\r\n]/g,' ')}）\n\nQ3-Request: ${body.requestId} ${hash}\n`,content:Buffer.from(JSON.stringify(state,null,2)+'\n').toString('base64')})});
   // Verify the precise commit, not mutable branch HEAD which another editor may advance.
   const verified=await this.get(saved.commit.sha);

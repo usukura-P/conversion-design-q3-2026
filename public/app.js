@@ -1,4 +1,4 @@
-import { PEOPLE, MONTHS, GOALS, STAGES, STATUS, QUALITATIVE, articleEvaluation, summarizeArticles, calculateMetrics, prepareSave, createWeek, nextMonday, previousWeek, dateOnly, mondayFor, mergeStates, applyConflictChoice, rebaseDraft, blockValue, setBlockValue, makeBlockDraft, mergeBlockDraft, overlayBlockDrafts, chooseBlockConflict, exportBlockDrafts } from './model.js';
+import { PEOPLE, MONTHS, GOALS, STAGES, STATUS, QUALITATIVE, articleEvaluation, summarizeArticles, calculateMetrics, prepareSave, createWeek, nextMonday, previousWeek, dateOnly, mondayFor, mergeStates, applyConflictChoice, rebaseDraft, blockValue, setBlockValue, makeBlockDraft, mergeBlockDraft, overlayBlockDrafts, chooseBlockConflict, exportBlockDrafts, normalizeArticleReviews, emptyArticleReview } from './model.js?v=20261013-12';
 import { performanceMetrics, sumRawMetrics, matchAxadArticle, trendPoints, jstObservationDate } from './axad-model.js';
 
 const main=document.querySelector('#main');
@@ -133,16 +133,32 @@ function articleReviewDraft(key){
  }}catch{draft.error='保存済み下書きを読み込めません。入力すると新しい下書きとして保存します。';}
  articleReviewDrafts.set(key,draft);return draft;
 }
-function reviewDraftStatus(draft){return 'この端末の下書き（共有保存は未対応）'+(draft.error?' · '+draft.error:draft.saved?' · 保存済み':'');}
+function reviewPath(key){const [weekId,articleId]=JSON.parse(decodeURIComponent(key));return ['weeks',{key:'id',id:weekId},'articleReviews',{key:'id',id:articleId}];}
+function reviewScope(key){const path=reviewPath(key);return sharedState.weeks.some(w=>w.id===path[1].id)?path:path.slice(0,2);}
+function reviewFields(key){const path=reviewPath(key);return blockValue(state,path)||emptyArticleReview(path[3].id);}
+function legacyReviewDiff(key){const legacy=articleReviewDraft(key).fields,current=reviewFields(key);return ['rating',...REVIEW_FIELDS.map(([field])=>field)].filter(field=>legacy[field]!==''&&legacy[field]!==current[field]);}
 function reviewRatingLabel(value){return REVIEW_RATINGS.find(([rating])=>rating===value)?.[1]||'未評価';}
-function articleRatingBadge(key){const value=articleReviewDraft(key).fields.rating;return `<span class="article-rating-badge" data-review-rating-badge="${e(key)}" data-review-rating="${value}" aria-label="評価：${reviewRatingLabel(value)}">${value?reviewRatingLabel(value):'—'}</span>`;}
+function articleRatingBadge(key){const value=reviewFields(key).rating;return `<span class="article-rating-badge" data-review-rating-badge="${e(key)}" data-review-rating="${e(value)}" aria-label="評価：${reviewRatingLabel(value)}">${value?reviewRatingLabel(value):'—'}</span>`;}
+function syncReviewInputs(key){
+ const fields=reviewFields(key);
+ main.querySelectorAll('[data-review-key]').forEach(other=>{if(other.dataset.reviewKey===key&&other.dataset.reviewField){other.value=fields[other.dataset.reviewField];if(other.dataset.reviewField==='rating')other.dataset.reviewRating=fields.rating;}});
+ main.querySelectorAll('[data-review-rating-badge]').forEach(badge=>{if(badge.dataset.reviewRatingBadge===key){badge.dataset.reviewRating=fields.rating;badge.textContent=fields.rating?reviewRatingLabel(fields.rating):'—';badge.setAttribute('aria-label','評価：'+reviewRatingLabel(fields.rating));}});
+}
 function saveArticleReviewInput(el){
  const key=el.dataset.reviewKey,field=el.dataset.reviewField;if(!validReviewKey(key)||(field!=='rating'&&!REVIEW_FIELDS.some(([name])=>name===field)))return;
- const draft=articleReviewDraft(key),value=String(el.value??'').slice(0,6000);if(field==='rating'&&!REVIEW_RATINGS.some(([rating])=>rating===value)){el.value=draft.fields.rating;return;}el.value=value;draft.fields[field]=value;
- try{localStorage.setItem(ARTICLE_REVIEW_PREFIX+key,JSON.stringify({schemaVersion:1,fields:draft.fields}));draft.error='';draft.saved=true;}catch{draft.error='この端末に保存できません。画面上の入力を保持しています。';draft.saved=false;}
- main.querySelectorAll('[data-review-key]').forEach(other=>{if(other.dataset.reviewKey===key&&other.dataset.reviewField===field){other.value=value;if(field==='rating')other.dataset.reviewRating=value;}});
- if(field==='rating')main.querySelectorAll('[data-review-rating-badge]').forEach(badge=>{if(badge.dataset.reviewRatingBadge===key){badge.dataset.reviewRating=value;badge.textContent=value?reviewRatingLabel(value):'—';badge.setAttribute('aria-label','評価：'+reviewRatingLabel(value));}});
- main.querySelectorAll('[data-review-status]').forEach(status=>{if(status.dataset.reviewStatus===key){status.textContent=reviewDraftStatus(draft);status.classList.toggle('error',Boolean(draft.error));}});
+ const scope=reviewScope(key),blockKey=keyFor(scope);if(syncing||savingKey===blockKey||blockDrafts[blockKey]?.pendingSave)return;
+ const fields=reviewFields(key),value=String(el.value??'').slice(0,6000);if(field==='rating'&&!REVIEW_RATINGS.some(([rating])=>rating===value)){el.value=fields.rating;return;}
+ fields[field]=value;el.value=value;if(!setBlockValue(state,reviewPath(key),fields))return;
+ updateBlockFromInput(blockKey);syncReviewInputs(key);
+}
+function importLegacyReview(key){
+ if(!validReviewKey(key))return;const scope=reviewScope(key),blockKey=keyFor(scope);if(syncing||savingKey===blockKey||blockDrafts[blockKey]?.pendingSave)return;
+ const fields=reviewFields(key),legacy=articleReviewDraft(key).fields;for(const field of legacyReviewDiff(key))fields[field]=legacy[field];
+ if(!setBlockValue(state,reviewPath(key),fields))return;updateBlockFromInput(blockKey);render();toast('この端末の下書きを取り込みました。共有するには振り返りを保存してください。');
+}
+function legacyArticleReviewBackups(){
+ const backups={};try{for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key?.startsWith(ARTICLE_REVIEW_PREFIX))backups[key]=localStorage.getItem(key);}}catch{}
+ return backups;
 }
 function toggleArticleReview(key){
  if(!validReviewKey(key))return;const open=!openArticleReviews.has(key);if(open)openArticleReviews.add(key);else openArticleReviews.delete(key);
@@ -150,8 +166,9 @@ function toggleArticleReview(key){
  main.querySelectorAll('[data-action="toggle-review"]').forEach(button=>{if(button.dataset.reviewKey===key)button.setAttribute('aria-expanded',String(open));});
 }
 function articleReviewPanel(a,idx,week,view){
- const key=keyFor([week.id,a.id]),draft=articleReviewDraft(key),id='article-review-'+view+'-'+encodeURIComponent(week.id)+'-'+encodeURIComponent(a.id);
- return `<tr class="performance-review-row" data-review-panel="${e(key)}" ${openArticleReviews.has(key)?'':'hidden'}><td colspan="17" class="performance-review-cell"><div id="${e(id)}" class="article-review-panel" role="region" aria-label="${e(a.title)||'新しい記事'}の振り返り"><p class="local-review-status ${draft.error?'error':''}" data-review-status="${e(key)}" role="status">${e(reviewDraftStatus(draft))}</p><div class="review-fields"><label class="form-field review-rating-field" for="local-note-${e(id)}-rating"><span>評価</span><select id="local-note-${e(id)}-rating" data-review-key="${e(key)}" data-review-field="rating" data-review-rating="${draft.fields.rating}">${REVIEW_RATINGS.map(([value,label])=>`<option value="${value}" ${draft.fields.rating===value?'selected':''}>${label}</option>`).join('')}</select></label>${REVIEW_FIELDS.map(([field,label])=>`<label class="form-field" for="local-note-${e(id)}-${field}"><span>${label}</span><textarea id="local-note-${e(id)}-${field}" data-review-key="${e(key)}" data-review-field="${field}" rows="3" maxlength="6000" placeholder="${label}を記入">${e(draft.fields[field])}</textarea></label>`).join('')}</div>${articleDetails(a,idx,week)}</div></td></tr>`;
+ const key=keyFor([week.id,a.id]),fields=reviewFields(key),legacy=articleReviewDraft(key),blockKey=keyFor(reviewScope(key)),id='article-review-'+view+'-'+encodeURIComponent(week.id)+'-'+encodeURIComponent(a.id);
+ const importAction=legacyReviewDiff(key).length?`<div class="legacy-review-import"><span>この端末に以前の下書きがあります。</span><button class="button small" data-action="import-review" data-review-key="${e(key)}" data-block="${e(blockKey)}">この端末の下書きを取り込む</button></div>`:'';
+ return `<tr class="performance-review-row" data-review-panel="${e(key)}" ${openArticleReviews.has(key)?'':'hidden'}><td colspan="17" class="performance-review-cell"><div id="${e(id)}" class="article-review-panel" role="region" aria-label="${e(a.title)||'新しい記事'}の振り返り">${legacy.error?'<p class="local-review-status error">以前の下書きを読み込めません。下書きのダウンロードに元のデータを含めます。</p>':''}${importAction}<div class="review-fields"><label class="form-field review-rating-field" for="review-note-${e(id)}-rating"><span>評価</span><select id="review-note-${e(id)}-rating" data-block="${e(blockKey)}" data-review-key="${e(key)}" data-review-field="rating" data-review-rating="${e(fields.rating)}">${REVIEW_RATINGS.map(([value,label])=>`<option value="${value}" ${fields.rating===value?'selected':''}>${label}</option>`).join('')}</select></label>${REVIEW_FIELDS.map(([field,label])=>`<label class="form-field" for="review-note-${e(id)}-${field}"><span>${label}</span><textarea id="review-note-${e(id)}-${field}" data-block="${e(blockKey)}" data-review-key="${e(key)}" data-review-field="${field}" rows="3" maxlength="6000" placeholder="${label}を記入">${e(fields[field])}</textarea></label>`).join('')}</div>${blockActions(reviewScope(key),'この振り返りを保存')}${articleDetails(a,idx,week)}</div></td></tr>`;
 }
 function articleTitleUrl(article){
  if(articleLinks?.schemaVersion!==1||!Array.isArray(articleLinks.articles))return null;
@@ -205,9 +222,15 @@ function alerts(){
  html+=Object.entries(blockDrafts).filter(([,d])=>d.mine===undefined||d.error?.includes('親')).map(([key,d])=>`<div class="alert warn"><div>未保存の記録 ${e(d.path.map(x=>typeof x==='object'?x.id:x).join(' / '))}${d.mine===undefined?'（削除）':''}</div>${blockActions(d.path,'この記録を保存')}</div>`).join('');
  return html+conflictPanel();
 }
+function articleReviewConflictField(path){return path.length===5&&path[0]==='weeks'&&path[1]?.key==='id'&&path[2]==='articleReviews'&&path[3]?.key==='id'&&['rating',...REVIEW_FIELDS.map(([field])=>field)].includes(path[4])?path[4]:null;}
+function conflictLabel(path){
+ const field=articleReviewConflictField(path);if(!field)return path.map(s=>typeof s==='object'?s.id:s).join(' / ');
+ const article=state.articles.find(a=>a.id===path[3].id)||sharedState.articles.find(a=>a.id===path[3].id),label=field==='rating'?'評価':REVIEW_FIELDS.find(([key])=>key===field)[1];
+ return `報告週 ${path[1].id} / ${article?.title||'削除済みの記事'} / ${label}`;
+}
 function conflictPanel(){
- const val=(v,deleted)=>deleted?'削除':typeof v==='object'?JSON.stringify(v):String(v??'未入力');
- return Object.entries(blockDrafts).filter(([,d])=>d.conflicts?.length).map(([key,d])=>`<div class="card conflict-panel"><h3>この欄の内容が競合しています</h3><p>自分と最新の内容を選んでから、この欄だけを保存してください。他の欄は続けて入力できます。</p>${d.conflicts.map((c,i)=>`<div class="conflict-row"><strong>${e(c.path.map(s=>typeof s==='object'?s.id:s).join(' / '))}</strong><div class="conflict-options"><div><h4>自分の下書き</h4><pre>${e(val(c.mine,c.mineDelete))}</pre><button class="button small" data-action="choose-conflict" data-block="${e(key)}" data-conflict="${i}" data-choice="mine">自分の内容を採用</button></div><div><h4>最新の共有内容</h4><pre>${e(val(c.theirs,c.theirsDelete))}</pre><button class="button small" data-action="choose-conflict" data-block="${e(key)}" data-conflict="${i}" data-choice="theirs">最新の内容を採用</button></div></div></div>`).join('')}</div>`).join('');
+ const val=(v,deleted,path)=>deleted?'削除':articleReviewConflictField(path)==='rating'&&REVIEW_RATINGS.some(([rating])=>rating===v)?reviewRatingLabel(v):typeof v==='object'?JSON.stringify(v):String(v??'未入力');
+ return Object.entries(blockDrafts).filter(([,d])=>d.conflicts?.length).map(([key,d])=>`<div class="card conflict-panel"><h3>この欄の内容が競合しています</h3><p>自分と最新の内容を選んでから、この欄だけを保存してください。他の欄は続けて入力できます。</p>${d.conflicts.map((c,i)=>`<div class="conflict-row"><strong>${e(conflictLabel(c.path))}</strong><div class="conflict-options"><div><h4>自分の下書き</h4><pre>${e(val(c.mine,c.mineDelete,c.path))}</pre><button class="button small" data-action="choose-conflict" data-block="${e(key)}" data-conflict="${i}" data-choice="mine">自分の内容を採用</button></div><div><h4>最新の共有内容</h4><pre>${e(val(c.theirs,c.theirsDelete,c.path))}</pre><button class="button small" data-action="choose-conflict" data-block="${e(key)}" data-conflict="${i}" data-choice="theirs">最新の内容を採用</button></div></div></div>`).join('')}</div>`).join('');
 }
 function render(){
  const latest=[...state.weeks].sort((a,b)=>b.id.localeCompare(a.id))[0];activeWeek=latest.id;const week=latest;document.body.classList.add('block-editing');
@@ -233,7 +256,7 @@ function preserveArticleMeasurements(draft,fresh){
  draft.conflicts=(draft.conflicts||[]).filter(c=>!fields.includes(c.path.at(-1)));
 }
 function acceptShared(fresh,except=''){
- sharedState=structuredClone(fresh.state);revision=fresh.revision;
+ sharedState=normalizeArticleReviews(fresh.state);revision=fresh.revision;
  for(const [key,d] of Object.entries(blockDrafts)){
   if(key===except)continue;preserveArticleMeasurements(d,sharedState);const merged=mergeBlockDraft(d,sharedState);
   if(merged.parentMissing){d.error='共有側でこの欄の親記録が削除されています。下書きをダウンロードして確認してください。';continue;}
@@ -244,7 +267,7 @@ function acceptShared(fresh,except=''){
 function updateBlockFromInput(key){const scope=JSON.parse(decodeURIComponent(key));if(!blockDrafts[key])blockDrafts[key]=makeBlockDraft(sharedState,scope);const d=blockDrafts[key];d.mine=blockValue(state,scope);d.error='';storeDraft();updateSaveStatus();}
 function toast(text){const t=document.querySelector('#toast');t.textContent=text;t.hidden=false;clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.hidden=true,4500);}
 async function request(url,options={}){const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),60000);try{const response=await fetch(url,{...options,signal:controller.signal,cache:'no-store'});let data;try{data=await response.json();}catch{data={};}if(!response.ok){const err=new Error(data.error||data.message||`HTTP ${response.status}`);err.status=response.status;throw err;}return data;}finally{clearTimeout(timer);}}
-async function apiGet(){return request(config.apiBase.replace(/\/$/,'')+'/api/state');}
+async function apiGet(){const fresh=await request(config.apiBase.replace(/\/$/,'')+'/api/state');return {...fresh,state:normalizeArticleReviews(fresh.state)};}
 async function refreshAxadData(){
  axadData=null;importStatus=null;
  try{const data=await request('./axad-data.json');if(data.schemaVersion===1&&data.media==='META'&&Array.isArray(data.articles)){
@@ -258,7 +281,7 @@ async function boot(){
  try{config=await request('./config.json');}catch{config={apiBase:'',repo:'usukura-P/conversion-design-q3-2026',branch:'codex/3q-dashboard'};}
  try{if(!config.apiBase)throw new Error('保存APIを準備中です。');const data=await apiGet();state=data.state;revision=data.revision;apiReady=true;}catch(err){apiReady=false;offlineMessage=err.message==='保存APIを準備中です。'?err.message:'保存サーバーとの通信に失敗しました。';try{state=await request('./data/state.json');}catch{try{state=await request(`https://raw.githubusercontent.com/${config.repo}/${config.branch}/data/state.json`);}catch(fallback){main.innerHTML=`<div class="error-page">進捗を読み込めませんでした。通信状態を確認して再読み込みしてください。<br>${e(fallback.message)}<br><button class="button" data-action="reload">再読み込み</button></div>`;return;}}}
  await refreshAxadData();await refreshArticleLinks();
- sharedState=structuredClone(state);activeWeek=[...state.weeks].sort((a,b)=>b.id.localeCompare(a.id))[0].id;try{editor=localStorage.getItem(DRAFT_KEY+'editor')||localStorage.getItem(LEGACY_KEY+'-editor')||'';}catch{}scanDrafts();
+ state=normalizeArticleReviews(state);sharedState=structuredClone(state);activeWeek=[...state.weeks].sort((a,b)=>b.id.localeCompare(a.id))[0].id;try{editor=localStorage.getItem(DRAFT_KEY+'editor')||localStorage.getItem(LEGACY_KEY+'-editor')||'';}catch{}scanDrafts();
  render();
 }
 async function saveBlock(key){
@@ -288,6 +311,7 @@ async function saveBlock(key){
     m.dispatched=currentCounts.dispatched;for(const p of PEOPLE)m.people[p.id].proposals=currentCounts.people[p.id].proposals;
    }
    if(!observedAt&&weekId===prepared.weeks.map(w=>w.id).sort().at(-1)){const m=prepared.weeks.find(w=>w.id===weekId).metrics;m.asOf=null;m.teamCvr=null;m.previousWeekCvr=null;m.eligibleArticles=0;m.unmeasurableArticles=0;for(const p of Object.values(m.people))p.cvr=null;}
+   if(draft.path[2]==='articleReviews')prepared.weeks.find(w=>w.id===weekId).metrics=structuredClone(fresh.state.weeks.find(w=>w.id===weekId).metrics);
    draft.pendingSave={state:prepared,revision:fresh.revision,requestId:crypto.randomUUID(),editor:typeof editor==='string'&&editor.trim()?editor.trim().slice(0,80):'記事チーム'};draft.axadGuardVersion=1;storeDraft();
   }
   const result=await request(config.apiBase.replace(/\/$/,'')+'/api/state',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(draft.pendingSave)});
@@ -300,7 +324,7 @@ async function saveBlock(key){
  }finally{savingKey='';updateSaveStatus();}
 }
 function downloadJson(value,name){const blob=new Blob([JSON.stringify(value,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-function downloadDraft(){const out=exportBlockDrafts(sharedState,blockDrafts);downloadJson({...out,revision,activeWeek,editor,exportedAt:new Date().toISOString()},`3q-draft-${activeWeek}-${TAB_ID.slice(0,8)}.json`);}
+function downloadDraft(){const out=exportBlockDrafts(sharedState,blockDrafts);downloadJson({...out,legacyArticleReviews:legacyArticleReviewBackups(),revision,activeWeek,editor,exportedAt:new Date().toISOString()},`3q-draft-${activeWeek}-${TAB_ID.slice(0,8)}.json`);}
 function openWeek(id){
  weekDisclosureState.set(id,true);const fold=document.querySelector('#week-'+id);if(fold)fold.open=true;
 }
@@ -313,13 +337,14 @@ main.addEventListener('input',event=>{
  const path=JSON.parse(decodeURIComponent(el.dataset.valuePath));let value=el.value;if(el.dataset.type==='number')value=value===''?null:Number(value);else if(el.dataset.type==='date')value=value||null;if(path.at(-1)==='initiativeId')value=value||null;
  if(!setBlockValue(state,path,value)){toast('共有側で記録が削除されています。入力を下書きダウンロードに保管して確認してください。');return;}updateBlockFromInput(el.dataset.block);
 });
-main.addEventListener('change',event=>{if(syncing)return;if(event.target.matches('select[data-path]'))event.target.dispatchEvent(new Event('input',{bubbles:true}));});
+main.addEventListener('change',event=>{if(syncing)return;if(event.target.dataset.reviewField){saveArticleReviewInput(event.target);return;}if(event.target.matches('select[data-path]'))event.target.dispatchEvent(new Event('input',{bubbles:true}));});
 async function refreshShared(){if(savingKey||syncing)return;syncing=true;updateSaveStatus();try{if(!config.apiBase)config=await request('./config.json');const fresh=await apiGet();await refreshAxadData();await refreshArticleLinks();acceptShared(fresh);apiReady=true;offlineMessage='';scanDrafts();render();toast('最新状態を確認しました。各欄の下書きは保持しています。');}catch(err){offlineMessage=`接続できませんでした：${err.message}`;render();}finally{syncing=false;updateSaveStatus();}}
 main.addEventListener('click',async event=>{
  const button=event.target.closest('[data-action]');if(button?.dataset.action==='toggle-review'){toggleArticleReview(button.dataset.reviewKey);return;}const reviewRow=event.target.closest('[data-review-row]');if(reviewRow&&!event.target.closest('button,a,input,textarea,select,summary,details,.article-title-line,.title-cell')){toggleArticleReview(reviewRow.dataset.reviewRow);return;}
  const jump=event.target.closest('[data-jump-week]');if(jump){openWeek(jump.dataset.jumpWeek);const d=document.querySelector('#week-'+jump.dataset.jumpWeek);if(d)d.open=true;return;}if(!button)return;
  const action=button.dataset.action,key=button.dataset.block;if(syncing||key===savingKey)return;
  if(action==='save-block'){await saveBlock(key);return;}
+ if(action==='import-review'){importLegacyReview(button.dataset.reviewKey);return;}
  if(action==='download-draft'){downloadDraft();return;}if(action==='download-stored'){const d=readStored(button.dataset.draft);if(d)downloadJson(d,'3q-stored-draft.json');return;}
  if(action==='reconnect'){await refreshShared();return;}if(action==='reload'){location.reload();return;}
  if(action==='discard-block'){if(savingKey||!confirm('この欄の下書きを戻しますか？ 他の欄には影響しません。'))return;delete blockDrafts[key];rebuildView();storeDraft();render();return;}

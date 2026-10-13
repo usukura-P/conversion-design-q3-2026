@@ -28,7 +28,7 @@
 /* Full-width dashboard with the current Japanese clock in the header. */
 :root{--sidebar:0px}.workspace{margin-left:0}.topbar-context{display:flex;align-items:center;gap:24px}.header-clock{display:block}.header-clock>span{font-size:8px;margin-bottom:2px}.header-clock time{font-size:12px;line-height:1.45}@media(max-width:720px){.topbar-context{gap:0}.header-clock time{font-size:11px}}
 
-/* Article reviews are local drafts underneath the unchanged performance row. */
+/* Shared article reviews appear underneath the unchanged performance row. */
 .performance-wrap{container-type:inline-size}.performance-article-row{cursor:pointer}.article-review-toggle{display:block;width:100%;padding:0;border:0;background:none;text-align:left;color:inherit;line-height:inherit;font-size:inherit}.article-review-toggle strong:before{content:'▸';color:#8193ae;margin-right:6px}.article-review-toggle[aria-expanded="true"] strong:before{content:'▾'}.performance-review-row[hidden]{display:none!important}.performance-table .performance-review-cell{padding:0;white-space:normal;background:#f8faff}.article-review-panel{position:sticky;left:0;width:100cqi;max-width:100cqi;padding:16px;box-sizing:border-box;background:#f8faff}.local-review-status{font-size:10px;color:var(--muted);margin:0 0 12px;line-height:1.6}.local-review-status.error{color:#b43f4e}.review-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}.review-fields textarea{min-height:100px}.article-review-panel>.item-details{border-top:1px solid var(--line)}.article-review-panel .detail-content{padding:0 0 12px}.article-review-panel>.item-details>summary{padding:12px 0}.article-review-panel .fields-grid{white-space:normal}@media(max-width:720px){.article-review-panel{padding:12px}.review-fields{grid-template-columns:1fr;gap:12px}.local-review-status{font-size:10px}.review-fields textarea{min-height:86px}}
 
 /* Verified article navigation is separate from the review disclosure. */
@@ -36,8 +36,10 @@
 
 .card-label .label-tag.kgi{color:#c8424b;border-color:#f0cbd0;background:#fff1f2}.card-label .label-tag.kpi{color:var(--green);border-color:#c4e6d8;background:#edf8f3}
 
-/* Manual review ratings share the local article draft. */
+/* Manual review ratings share the scoped review draft. */
 .review-fields{grid-template-columns:100px repeat(3,minmax(0,1fr))}.review-rating-field select{width:100%;font-weight:700}.article-rating-badge{flex:0 0 22px;min-width:22px;text-align:center;font-size:12px;font-weight:700;line-height:20px;border:1px solid var(--line);border-radius:4px;background:#f3f5f8;color:var(--muted)}.review-rating-field select[data-review-rating="good"],.article-rating-badge[data-review-rating="good"]{color:var(--green);border-color:#c4e6d8;background:#edf8f3}.review-rating-field select[data-review-rating="caution"],.article-rating-badge[data-review-rating="caution"]{color:#9b651d;border-color:#edd8b8;background:#fff6e7}.review-rating-field select[data-review-rating="bad"],.article-rating-badge[data-review-rating="bad"]{color:#c8424b;border-color:#f0cbd0;background:#fff1f2}@media(max-width:720px){.review-fields{grid-template-columns:1fr}.review-rating-field{max-width:100px}}
 
 /* Personal progress folds as one section, with each input label shown once. */
 .personal-fold>summary{display:flex;align-items:center;gap:10px;list-style:none;cursor:pointer;user-select:none}.personal-fold>summary::-webkit-details-marker{display:none}.personal-fold>summary:before{content:'▸';font-size:11px;color:#93a2b9}.personal-fold[open]>summary:before{content:'▾'}.personal-fold>summary>.section-title{flex:1;margin-bottom:0}.personal-fold>.member-grid{margin-top:22px}
+
+.legacy-review-import{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 12px;font-size:11px;color:var(--muted)}.article-review-panel>.block-actions{margin-bottom:12px}

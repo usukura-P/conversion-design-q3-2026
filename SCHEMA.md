@@ -12,6 +12,8 @@
 - initiatives: [{id:string,title:string,owner:id,stage:"idea"|"meeting"|"agreed"|"production"|"released"|"dispatched"|"reviewed",meetingDate:date|null,dispatchDate:date|null,deadline:date|null,evidence:string,background:string,craft:string,feedback:string,learning:string,next:string,url:string}]
 - weeks: [{id:月曜の日付,releaseStart:前週月曜,releaseEnd:前週日曜,team:{status:string,change:string,issues:string,priorities:string,requests:string},members:{各id:{reflection:string,feedback:string,action:string}},qualitative:[{id:string,status:"not_started"|"in_progress"|"achieved",evidence:string,next:string}],metrics:{asOf:ISO|null,teamCvr:number|null,previousWeekCvr:number|null,eligibleArticles:number,unmeasurableArticles:number,dispatched:number,monthlyRevenue:月次実績3件のスナップショット（旧記録では省略可）,people:{各id:{cvr:number|null,proposals:number}}}}]
 - goalsはコード内固定: 売上・CVR・配信・個人立案と原文定性。state内で変更しない。
+- weeks[].articleReviews: [{id:記事ID,rating:""|"good"|"caution"|"bad",result:string,analysis:string,next:string}]。同じ週でIDは一意、英数字・ハイフン・アンダースコアのみ（最大120文字）。文章は各6000文字以内。各記録はこの5キーだけを持ち、HTMLタグ・危険な制御文字は他の文章欄と同様に拒否する。記事削除後も過去のレビューを保持するため、IDの現在の記事への参照は必須にしない。
+- articleReviewsは旧データで省略可（表示上は空配列）。GETは保存済みの形式を返す。旧クライアントが保存時に同じ週のarticleReviewsを省略した場合、サーバーが現行の保存済み配列を保持する。明示した配列（空配列を含む）は更新として受理する。schemaVersionは1を維持し、補完は元のrequestの重複判定・revision確認後に行う。
 - 未入力はnull／空文字、実績0を生成しない。draftはlocalStorage。metricsは最新週を保存するときに現在のstateから生成する。過去週の文言編集では既存metricsを保持し、過去週の未記録metricsも現在データで埋めない。
 
 ## baseline.articles
