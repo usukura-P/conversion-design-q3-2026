@@ -143,3 +143,6 @@ User suspects missing previous-week articles and requests AXAD re-fetch for actu
 
 ## 2026-10-13 Collapse dispatch progress chart by default
 User keeps 配信進捗の変遷 but does not need to review it every week. Wrap only dispatchChart in native details/summary, initially closed; preserve existing graph, notes, KPI and stored data. Summary uses same visual folding language as baseline. Files app.js/index cache20261013-8 and minimal CSS only if needed. Worker implements, no data/API updates. Existing rendering assertions can check closed disclosure and retained chart. Root reviews, verifies closed/open on localhost and public, commits feature branch. Revert UI commit to undo.
+
+## 2026-10-13 Color-code KGI/KPI card badges
+User requests upper-right card badges: red KGI for sales, green KPI01 for CVR and green KPI02 for initiative dispatch. Update only badges/style. KPI01 always displays as the badge; retain existing registered-only scope information elsewhere within the CVR card when population is incomplete (move existing wording, no new warning). Preserve numeric metrics and data/API. Worker minimal app/CSS/indexcache20261013-9 edits, use existing badge treatment with red/green text and subtle matching border/background. Verify actual labels/colors and no stale upper-right scope badge, current scope retained, desktop/mobile readable. Root review/preview/publish.

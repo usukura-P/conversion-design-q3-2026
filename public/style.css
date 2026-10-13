@@ -33,3 +33,5 @@
 
 /* Verified article navigation is separate from the review disclosure. */
 .article-title-line{display:flex;align-items:flex-start;gap:6px}.article-title-line>.article-review-toggle{display:inline-flex;align-items:center;justify-content:center;width:20px;min-height:20px;flex:0 0 20px;margin:0;padding:0;color:#8193ae}.review-chevron:before{content:'▸'}.article-review-toggle[aria-expanded="true"] .review-chevron:before{content:'▾'}.article-title-link,.article-title-plain{min-width:0;flex:1;overflow-wrap:anywhere}.article-title-link{color:var(--blue)}.article-title-link:hover{text-decoration:underline}.footer{flex-wrap:wrap;align-items:center}.footer .text-link{font-size:9px}
+
+.card-label .label-tag.kgi{color:#c8424b;border-color:#f0cbd0;background:#fff1f2}.card-label .label-tag.kpi{color:var(--green);border-color:#c4e6d8;background:#edf8f3}
