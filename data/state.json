@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-13T09:29:29.825Z",
+  "updatedAt": "2026-10-13T11:17:49.915Z",
   "baseline": {
     "septemberRevenue": 554427123,
     "septemberCvr": 1.653647261445,
@@ -968,14 +968,14 @@
       ],
       "metrics": {
         "asOf": "2026-10-13T02:05:07.000Z",
-        "teamCvr": 1.6119133160942833,
-        "previousWeekCvr": 1.3780624498752188,
-        "eligibleArticles": 9,
+        "teamCvr": 1.7253743115919842,
+        "previousWeekCvr": 1.6026748157960664,
+        "eligibleArticles": 8,
         "unmeasurableArticles": 0,
         "dispatched": 0,
         "people": {
           "usukura": {
-            "cvr": 1.6119133160942833,
+            "cvr": 1.7253743115919842,
             "proposals": 0
           },
           "kantake": {
@@ -983,7 +983,7 @@
             "proposals": 0
           },
           "aoki": {
-            "cvr": 1.836253543276892,
+            "cvr": 2.213596273664964,
             "proposals": 0
           },
           "nakagawa": {
