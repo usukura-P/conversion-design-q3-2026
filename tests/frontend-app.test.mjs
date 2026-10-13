@@ -60,7 +60,7 @@ test('render escapes HTML and unsafe links; each predetermined text field has sc
  for(const u of ['javascript:alert(1)','data:text/html,x','//bad.invalid','https://user:password@example.com'])assert.equal(h.api.safeUrl(u),false);assert.equal(h.api.safeUrl('https://example.com'),true);
 });
 test('unrecorded history stays unrecorded and dispatch graph supports more than target',()=>{
- const h=harness();assert.match(h.api.history(),/立案 —件/);h.api.get().sharedState.weeks[0].metrics.asOf='2026-10-12T00:00:00Z';h.api.get().sharedState.weeks[0].metrics.dispatched=30;assert.doesNotMatch(h.api.dispatchChart(),/cy="-/);
+ const h=harness();assert.match(h.api.history(),/立案 —件/);h.api.get().sharedState.weeks[0].metrics.asOf='2026-10-12T00:00:00Z';h.api.get().sharedState.weeks[0].metrics.dispatched=30;const html=h.api.dispatchChart();assert.match(html,/^<details class="card baseline-card"><summary>配信進捗の変遷<\/summary>/);assert.doesNotMatch(html,/<details[^>]*\bopen\b/);assert.equal(html.split('配信進捗の変遷').length-1,1);assert.match(html,/<svg class="chart dispatch-chart"/);assert.match(html,/配信日が10\/1〜12\/31の施策を集計/);assert.doesNotMatch(html,/cy="-/);
 });
 test('server validation error unlocks only this block for correction',async()=>{
  const h=harness(),k=h.input('weeks.0.team.status','invalid');h.request(async(u,o)=>{if(o)throw Object.assign(new Error('invalid revenue'),{status:400});return {state:model.initialState(),revision:'r1'};});await h.api.saveBlock(k);assert.equal(h.api.get().blockDrafts[k].pendingSave,null);assert.match(h.api.get().blockDrafts[k].error,/入力/);h.input('weeks.0.team.status','corrected');assert.equal(h.api.get().blockDrafts[k].mine,'corrected');
