@@ -18,6 +18,26 @@ export function matchAxadArticle(article,data,observedThrough=null){
  if(row.metrics?.cv!==article.metaCv||row.metrics?.clicks!==article.metaClicks)return {status:'unmatched',raw:null};
  return {status:'matched',raw:row.metrics,source:row};
 }
+// The table has its own coherent all-media + Meta import; saved KPI counts stay separate.
+const validRaw=raw=>raw&&RAW_KEYS.every(k=>Object.hasOwn(raw,k)&&(raw[k]===null||(known(raw[k])&&(k==='profit'||raw[k]>=0))));
+export function matchArticlePerformance(article,data,observedThrough=null){
+ const unknown=status=>({status,raw:null,metaRaw:null});
+ if(!data||data.schemaVersion!==1||data.media!=='ALL'||!Array.isArray(data.articles))return unknown('missing');
+ const matches=data.articles.filter(r=>r&&r.id===article.id);
+ if(matches.length!==1)return unknown('unmatched');
+ const row=matches[0];
+ if(!['title','owner','releaseDate'].every(k=>row[k]===article[k]))return unknown('unmatched');
+ if(observedThrough&&row.observedThrough!==observedThrough)return unknown('historical_missing');
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(row.observedThrough||'')||row.observedThrough!==data.asOf||row.observedThrough!==article.observedThrough||row.releaseDate>row.observedThrough)return unknown('unmatched');
+ if(!validRaw(row.allMediaMetrics)||!validRaw(row.metaMetrics))return unknown('unmatched');
+ return {status:'matched',raw:row.allMediaMetrics,metaRaw:row.metaMetrics,source:row};
+}
+export function articlePerformanceMetrics(match){
+ return {...performanceMetrics(match?.raw),metaRealCvr:performanceMetrics(match?.metaRaw).realCvr};
+}
+export function articlePerformanceTotals(matches){
+ return articlePerformanceMetrics({raw:sumRawMetrics(matches.map(m=>m.raw)),metaRaw:sumRawMetrics(matches.map(m=>m.metaRaw))});
+}
 export function jstObservationDate(value){
  if(!value)return null;const d=new Date(value);if(!Number.isFinite(d.getTime()))return null;
  return new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);

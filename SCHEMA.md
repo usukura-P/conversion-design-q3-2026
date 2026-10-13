@@ -37,3 +37,11 @@
 API schemaVersion 1は維持する。最新GETに対象欄だけを三方向統合し、既存POST envelopeで送る。チーム・個人は文言ごと、定性は目標ID、売上は月、記事・施策は記録IDが保存単位。未共有の新しい週のみ週全体を保存する。
 
 localStorageの下書きはschemaVersion 2、ページごとのUUIDキーと安定した記録IDパスを使う。競合の両案と失敗時のpendingSaveを保持し、別タブのstorageイベントは現在の入力を置き換えない。ダウンロードには共有状態・自分の案・競合情報を含む。baselineと過去週metricsは共有側を維持する。
+
+## 読取専用の記事パフォーマンス原数
+
+`public/article-performance.json` は共有stateとは別の公開集計。`{schemaVersion:1,media:"ALL",asOf:"YYYY-MM-DD",fetchedAtJst:ISO JST,articles:[{id,title,owner,releaseDate,observedThrough,allMediaMetrics,metaMetrics}]}`。各metricsは `{spend,impressions,clicks,mcv,cv,revenue,profit}` の有限数またはnull。profit以外は非負。全媒体とMetaを同時取得し、未取得を0に変換しない。
+
+表はID・記事名・担当・リリース日・観測日を厳密照合する。`observedThrough` は `asOf` と共有記事の観測日に一致すること。過去週はその週の観測日が一致する場合だけ表示する。原数ブロック欠損・不正・同一記事の重複は未照合として扱い、既存Metaデータへフォールバックしない。Metaの保存済みCV/Clicksとの比較は行わず、表の同時取得したMeta原数を使う。
+
+表は全媒体の16指標＋右端Meta実質CVR（記事名を含め18列）。実質CVRは全媒体CV/Clicks、Meta実質CVRはMeta CV/Clicks。合計行は両metricsをそれぞれ原数合算後に算出。分母0・nullは算出不可。全媒体の比率はKPI判定に使わない。共有stateのMeta原数・週次metrics・記事振り返り、および `public/axad-data.json` のKPI・グラフ原数はこのファイルの更新で変更しない。
