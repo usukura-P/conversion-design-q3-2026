@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-13T03:13:41.500Z",
+  "updatedAt": "2026-10-13T03:13:54.249Z",
   "baseline": {
     "septemberRevenue": 554427123,
     "septemberCvr": 1.653647261445,
@@ -1009,15 +1009,7 @@
           }
         ]
       },
-      "articleReviews": [
-        {
-          "id": "shared-review-probe-9384681c-dead-4db0-827a-476d10f4f970",
-          "rating": "",
-          "result": "共有保存動作確認・検証後削除",
-          "analysis": "",
-          "next": ""
-        }
-      ]
+      "articleReviews": []
     }
   ]
 }
