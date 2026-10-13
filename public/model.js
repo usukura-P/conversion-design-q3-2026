@@ -21,8 +21,16 @@ export function mondayFor(date){const day=new Date(date+'T00:00:00Z').getUTCDay(
 export function previousWeek(monday){const start=shift(monday,-7);return {start,end:shift(monday,-1)};}
 export function nextMonday(monday){return shift(monday,7);}
 export function inQuarter(date){return Boolean(date && date>=GOALS.quarterStart && date<=GOALS.quarterEnd);}
+// Keep the AXAD identity/title intact: this correction was confirmed by the user.
+const ARTICLE_EXCLUSIONS=new Map([['axad-release-row-205','ユーザー確認済みの修正記事（DIO ★033）']]);
+export function articleExclusionReason(a){
+ if(ARTICLE_EXCLUSIONS.has(a.id))return ARTICLE_EXCLUSIONS.get(a.id);
+ if(a.title.includes('貸し'))return '記事名に「貸し」を含む';
+ if(a.title.includes('修正'))return '記事名に「修正」を含む';
+ return null;
+}
 export function articleEvaluation(a){
- if(a.title.includes('貸し')||a.title.includes('修正'))return {status:'excluded',cvr:null};
+ const reason=articleExclusionReason(a);if(reason)return {status:'excluded',cvr:null,reason};
  if(typeof a.metaClicks!=='number'||!Number.isFinite(a.metaClicks)||a.metaClicks<=0||typeof a.metaCv!=='number'||!Number.isFinite(a.metaCv)||a.metaCv<0)return {status:'unmeasurable',cvr:null};
  return {status:'eligible',cvr:a.metaCv/a.metaClicks*100};
 }

@@ -29,6 +29,19 @@ class BoundaryTests(unittest.TestCase):
         rows=[{'title':'a','owner':'ai','metrics':{'cv':1,'clicks':2}}, {'title':'改修','owner':'aoki','metrics':{'cv':0,'clicks':10}}, {'title':'修正','owner':'aoki','metrics':{'cv':8,'clicks':10}}]
         self.assertEqual(summarize(rows),(25.0,2))
         self.assertEqual(summarize([]),(None,0))
+    def test_confirmed_correction_and_frontend_policy_agree(self):
+        import subprocess
+        import refresh_axad as module
+        rows=[{'id':ident,'title':title,'metrics':{'cv':cv,'clicks':100}} for ident,title,cv in [('new','新規',3),('renew','改修',6),('fix','修正',90),('loan','貸し',80),('axad-release-row-205','★033_DIOクリニック女性_15ヶ月分100円_青木_CPA用_20261008',50),('other-dio','DIO新規',9)]]
+        before=copy.deepcopy(rows);self.assertEqual(summarize(rows),(6.0,3));self.assertEqual(rows,before)
+        result=subprocess.run(['node','--input-type=module','-e',"import {articleExclusionReason} from './public/model.js';const rows=JSON.parse(process.argv[1]);console.log(JSON.stringify(rows.map(articleExclusionReason)));",json.dumps(rows,ensure_ascii=False)],cwd=module.ROOT,capture_output=True,text=True,check=True)
+        self.assertEqual(json.loads(result.stdout),[module.article_exclusion_reason(a) for a in rows])
+    def test_refresh_population_keeps_corrections_registered_but_excludes_import_targets(self):
+        import refresh_axad as module
+        seed={'articles':[{'id':ident,'title':title,'owner':'aoki','releaseDate':'2026-10-08'} for ident,title in [('eligible','★034_DIOクリニック女性_新規_20261008'),('axad-release-row-205','★033_DIOクリニック女性_15ヶ月分100円_青木_CPA用_20261008'),('fix','★011_DIOクリニック女性_修正_20261008')]]}
+        original=copy.deepcopy(seed)
+        with patch.object(module,'read',side_effect=[{'articles':[]},{'articles':[]},{'addedArticles':[]}]):targets=module.population({'state':seed})
+        self.assertEqual([a['id'] for a in targets],['eligible']);self.assertEqual(seed,original)
     def test_ambiguity_sum_null(self):
         self.assertIsNone(normalize({'matched_row_count':0,'ambiguous_row_count':3,'null_cv_rows':0,'cv':None},'cv'))
     def test_timestamp_variable_precision(self):

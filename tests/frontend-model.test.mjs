@@ -21,6 +21,14 @@ test('nullとクリック0は未測定として区別し、平均に入れない
  assert.equal(result.eligible,2);assert.equal(result.unmeasurable,1);assert.equal(result.excluded,1);
  assert.equal(summarizeArticles([]).cvr,null);
 });
+test('確認済み修正記事DIO033は元の正式名・原数・振り返りを保持して最新KPIから除外する',()=>{
+ const state=initialState();state.articles=[article({id:'new',title:'新規記事'}),article({id:'renew',title:'改修記事',metaCv:6}),article({id:'fix',title:'修正記事',metaCv:90}),article({id:'axad-release-row-205',title:'★033_DIOクリニック女性_15ヶ月分100円_青木_CPA用_20261008',metaCv:50})];
+ state.weeks[0].articleReviews=[{id:'axad-release-row-205',rating:'caution',result:'保存済みの結果',analysis:'保存済みの考察',next:'次の行動'}];state.weeks.push(createWeek('2026-10-05'));state.weeks[1].metrics.teamCvr=9;
+ const before=structuredClone(state),result=prepareSave(state,'2026-10-12','2026-10-13T02:05:07Z'),evaluation=articleEvaluation(state.articles[3]);
+ assert.equal(evaluation.status,'excluded');assert.match(evaluation.reason,/ユーザー確認済みの修正記事/);assert.equal(articleEvaluation({...state.articles[3],title:'新規に名前変更'}).status,'excluded');
+ assert.equal(articleEvaluation(article({id:'other-dio',title:state.articles[3].title})).status,'eligible');assert.equal(result.weeks[0].metrics.teamCvr,4.5);assert.equal(result.weeks[0].metrics.previousWeekCvr,4.5);assert.equal(result.weeks[0].metrics.people.aoki.cvr,4.5);assert.equal(result.weeks[0].metrics.eligibleArticles,2);
+ assert.deepEqual(result.articles,before.articles);assert.deepEqual(result.weeks[0].articleReviews,before.weeks[0].articleReviews);assert.deepEqual(result.weeks[1],before.weeks[1]);assert.deepEqual(state,before);
+});
 test('3Qの日付境界と前週コホート・個人立案／配信の集計',()=>{
  const state=initialState();
  state.articles=[article(),article({id:'sept',releaseDate:'2026-09-30',metaCv:99}),article({id:'next',releaseDate:'2026-10-12',metaCv:5}),article({id:'last',releaseDate:'2026-12-31',metaCv:50}),article({id:'outside',releaseDate:'2027-01-01',metaCv:90})];

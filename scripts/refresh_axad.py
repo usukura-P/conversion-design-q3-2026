@@ -7,6 +7,12 @@ ROOT=Path(__file__).resolve().parents[1]
 API='https://q3-progress-api-295429960025.asia-northeast1.run.app/api/state'
 FIELDS=['spend','impressions','clicks','mcv','cv','revenue','profit']
 PEOPLE=['usukura','kantake','aoki','nakagawa']
+ARTICLE_EXCLUSIONS={'axad-release-row-205':'ユーザー確認済みの修正記事（DIO ★033）'}
+def article_exclusion_reason(article):
+    if article.get('id') in ARTICLE_EXCLUSIONS:return ARTICLE_EXCLUSIONS[article['id']]
+    for word in ['貸し','修正']:
+        if word in article['title']:return '記事名に「'+word+'」を含む'
+    return None
 def quarter_cutoff(asof):return min(date.fromisoformat(asof),date(2026,12,31)).isoformat()
 def default_asof():return datetime.now(timezone(timedelta(hours=9))).date().isoformat()
 def current_observation(asof,instant):
@@ -32,7 +38,7 @@ def parse_db_time(value):
     return datetime.fromisoformat(stamp)
 def summarize(rows):
     cvrs=[ratio(a['metrics']['cv'],a['metrics']['clicks'])*100 for a in rows
-      if not any(w in a['title'] for w in ['貸し','修正']) and ratio(a['metrics']['cv'],a['metrics']['clicks']) is not None]
+      if not article_exclusion_reason(a) and ratio(a['metrics']['cv'],a['metrics']['clicks']) is not None]
     return (sum(cvrs)/len(cvrs) if cvrs else None,len(cvrs))
 def population(before):
     baseline=read(ROOT/'data/baseline.json')
@@ -47,7 +53,7 @@ def population(before):
         if a['id'] not in live or not same_metadata(a,live[a['id']]):raise ValueError('承認済み記事metadata不一致: '+a['id'])
     current=[];keys=set()
     for a in live.values():
-        if any(term in a['title'] for term in ['貸し','修正']):continue
+        if article_exclusion_reason(a):continue
         if not '2026-10-01'<=a['releaseDate']<='2026-12-31':continue
         match=re.fullmatch(r'★([0-9]{1,3})_([^_]+)_.+_([0-9]{8})',a['title'])
         if not match or match[3]!=a['releaseDate'].replace('-','') or a['owner'] not in PEOPLE+['ai']:raise ValueError('正式記事metadata不正: '+a['id'])

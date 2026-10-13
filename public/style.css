@@ -47,3 +47,6 @@
 .performance-table .metric-metaRealCvr{width:88px}.performance-table .kpi-metric{background:#f0faf5;color:#167454}.performance-table th.kpi-metric{font-size:9px}.table-source{font-size:10px;color:var(--muted);padding:0 18px 10px}
 
 .report-card textarea{height:max(156px,calc(6lh + 44px))}.article-review-panel .review-fields textarea{height:max(200px,calc(6lh + 44px))}
+
+/* Excluded articles remain available as a folded reference, outside totals. */
+.excluded-articles>.excluded-reference-note{font-size:11px;color:var(--muted);line-height:1.8;margin:0;padding:0 18px 14px}.excluded-count{color:var(--muted);font-size:11px}.article-exclusion-reason{display:block;margin-top:4px;font-size:10px;font-weight:400;color:#8a6c35;line-height:1.6}.excluded-articles>.performance-wrap{border-top:1px solid var(--line)}
