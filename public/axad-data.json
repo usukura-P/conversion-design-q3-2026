@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "asOf": "2026-10-09",
-  "fetchedAtJst": "2026-10-09T15:59:45.297770+09:00",
+  "asOf": "2026-10-13",
+  "fetchedAtJst": "2026-10-13T11:05:07+09:00",
   "media": "META",
   "populationComplete": false,
   "articles": [
@@ -9,28 +9,28 @@
       "id": "axad-20261007-tcb-fat-body-women-021",
       "title": "★021_TCB-脂肪溶解からだ女性_最大無料_臼倉_フリップアンケ_新規_尿ドバドバ_20261007",
       "owner": "usukura",
+      "releaseDate": "2026-10-07",
       "projectName": "TCB-脂肪溶解からだ女性",
       "articleNo": 21,
-      "releaseDate": "2026-10-07",
-      "observedThrough": "2026-10-09",
+      "observedThrough": "2026-10-13",
       "metrics": {
-        "spend": 22815,
-        "impressions": 1092,
-        "clicks": 23,
-        "mcv": 7,
-        "cv": 0,
-        "revenue": 0,
-        "profit": -22815
+        "spend": 107838,
+        "impressions": 6586,
+        "clicks": 136,
+        "mcv": 39,
+        "cv": 4,
+        "revenue": 68400,
+        "profit": -39438
       }
     },
     {
       "id": "axad-release-row-198",
       "title": "★042_TCB-二重女性_3万円OFF_寒竹_フリップアンケ_ひかる_20261001",
       "owner": "kantake",
+      "releaseDate": "2026-10-01",
       "projectName": "TCB-二重女性",
       "articleNo": 42,
-      "releaseDate": "2026-10-01",
-      "observedThrough": "2026-10-09",
+      "observedThrough": "2026-10-13",
       "metrics": {
         "spend": 32280,
         "impressions": 5726,
@@ -45,64 +45,64 @@
       "id": "axad-release-row-199",
       "title": "★010_DIO脱毛男性_11ヶ月分100円_青木_VIO・素材一貫性_20261001",
       "owner": "aoki",
+      "releaseDate": "2026-10-01",
       "projectName": "DIO脱毛男性",
       "articleNo": 10,
-      "releaseDate": "2026-10-01",
-      "observedThrough": "2026-10-09",
+      "observedThrough": "2026-10-13",
       "metrics": {
-        "spend": 363856,
-        "impressions": 67327,
-        "clicks": 1296,
-        "mcv": 278,
-        "cv": 21,
-        "revenue": 682000,
-        "profit": 318144
+        "spend": 1022481,
+        "impressions": 226147,
+        "clicks": 3944,
+        "mcv": 757,
+        "cv": 70,
+        "revenue": 2330000,
+        "profit": 1307519
       }
     },
     {
       "id": "axad-release-row-200",
       "title": "★012_TCB-鼻女性_最大無料_青木_正面BA追加_Eライン_20261002",
       "owner": "aoki",
+      "releaseDate": "2026-10-02",
       "projectName": "TCB-鼻女性",
       "articleNo": 12,
-      "releaseDate": "2026-10-02",
-      "observedThrough": "2026-10-09",
+      "observedThrough": "2026-10-13",
       "metrics": {
-        "spend": 311233,
-        "impressions": 77389,
-        "clicks": 663,
-        "mcv": 115,
-        "cv": 24,
-        "revenue": 387600,
-        "profit": 76367
+        "spend": 444398,
+        "impressions": 117705,
+        "clicks": 983,
+        "mcv": 150,
+        "cv": 30,
+        "revenue": 484500,
+        "profit": 40102
       }
     },
     {
       "id": "axad-release-row-201",
       "title": "★053_TCB-ピコレーザー女性_0円_中川_フリップアンケ_シミ肝斑_動画記事_20261002",
       "owner": "nakagawa",
+      "releaseDate": "2026-10-02",
       "projectName": "TCB-ピコレーザー女性",
       "articleNo": 53,
-      "releaseDate": "2026-10-02",
-      "observedThrough": "2026-10-09",
+      "observedThrough": "2026-10-13",
       "metrics": {
-        "spend": 734386,
-        "impressions": 135417,
-        "clicks": 1981,
-        "mcv": 653,
-        "cv": 55,
-        "revenue": 992750,
-        "profit": 258364
+        "spend": 925050,
+        "impressions": 171888,
+        "clicks": 2648,
+        "mcv": 765,
+        "cv": 69,
+        "revenue": 1245450,
+        "profit": 320400
       }
     },
     {
       "id": "axad-release-row-202",
       "title": "★041_TCB-ニキビ女性_0円_寒竹_記事検証_ひかる改修_20261002",
       "owner": "kantake",
+      "releaseDate": "2026-10-02",
       "projectName": "TCB-ニキビ女性",
       "articleNo": 41,
-      "releaseDate": "2026-10-02",
-      "observedThrough": "2026-10-09",
+      "observedThrough": "2026-10-13",
       "metrics": {
         "spend": 24653,
         "impressions": 7343,
@@ -117,18 +117,54 @@
       "id": "axad-release-row-205",
       "title": "★033_DIOクリニック女性_15ヶ月分100円_青木_CPA用_20261008",
       "owner": "aoki",
+      "releaseDate": "2026-10-08",
       "projectName": "DIOクリニック女性",
       "articleNo": 33,
-      "releaseDate": "2026-10-08",
-      "observedThrough": "2026-10-09",
+      "observedThrough": "2026-10-13",
       "metrics": {
-        "spend": 8550,
-        "impressions": 1948,
-        "clicks": 18,
-        "mcv": 0,
-        "cv": 0,
-        "revenue": 0,
-        "profit": -8550
+        "spend": 74676,
+        "impressions": 12209,
+        "clicks": 142,
+        "mcv": 25,
+        "cv": 1,
+        "revenue": 43000,
+        "profit": -31676
+      }
+    },
+    {
+      "id": "axad-release-row-206",
+      "title": "★003_TKBC-医療痩身女性_0円_寒竹_型検証_新規_全身痩せ_20261009",
+      "owner": "kantake",
+      "releaseDate": "2026-10-09",
+      "projectName": "TKBC-医療痩身女性",
+      "articleNo": 3,
+      "observedThrough": "2026-10-13",
+      "metrics": {
+        "spend": 82799,
+        "impressions": 45725,
+        "clicks": 11366,
+        "mcv": 30,
+        "cv": 6,
+        "revenue": 159600,
+        "profit": 76801
+      }
+    },
+    {
+      "id": "axad-release-row-208",
+      "title": "★026_TCB-ピコレーザー男性_最大無料_青木_アンケ記事_新規_日焼けシミ特化_20261009",
+      "owner": "aoki",
+      "releaseDate": "2026-10-09",
+      "projectName": "TCB-ピコレーザー男性",
+      "articleNo": 26,
+      "observedThrough": "2026-10-13",
+      "metrics": {
+        "spend": 137099,
+        "impressions": 27509,
+        "clicks": 441,
+        "mcv": 194,
+        "cv": 8,
+        "revenue": 144400,
+        "profit": 7301
       }
     }
   ],
@@ -144,7 +180,7 @@
         "people": {
           "usukura": 1.1971538054561337,
           "kantake": 2.1285997956911493,
-          "aoki": 0.0,
+          "aoki": 0,
           "nakagawa": 0.16025641025641024
         }
       },
@@ -217,15 +253,28 @@
       },
       {
         "releaseStart": "2026-10-01",
-        "releaseEnd": "2026-10-09",
-        "observedThrough": "2026-10-09",
-        "teamCvr": 1.3684507772182595,
-        "eligibleArticles": 7,
+        "releaseEnd": "2026-10-11",
+        "observedThrough": "2026-10-11",
+        "teamCvr": 1.8796863012202811,
+        "eligibleArticles": 8,
         "people": {
-          "usukura": 1.3684507772182595,
+          "usukura": 1.8796863012202811,
           "kantake": 0.78125,
-          "aoki": 1.7467599575442714,
-          "nakagawa": 2.7763755678950024
+          "aoki": 1.7907053445446692,
+          "nakagawa": 2.6424442609413705
+        }
+      },
+      {
+        "releaseStart": "2026-10-01",
+        "releaseEnd": "2026-10-13",
+        "observedThrough": "2026-10-13",
+        "teamCvr": 1.6119133160942833,
+        "eligibleArticles": 9,
+        "people": {
+          "usukura": 1.6119133160942833,
+          "kantake": 0.5384296732946213,
+          "aoki": 1.836253543276892,
+          "nakagawa": 2.6057401812688825
         }
       }
     ]
@@ -233,6 +282,8 @@
   "notes": [
     "登録記事を対象に集計。9月には実リリース・担当範囲が未確認の6候補があり、網羅性は未確定。",
     "9月は9/1以降、3Qは10/1以降リリース記事を各週まで累計。原数はリリース日〜各週の観測終端。最新日は当日途中。",
-    "9月の累計推移は9/25確認3記事を加えた22記事。固定比較値の9月1.65%・2Q2.22%は従来73記事の対象を保持している。"
+    "9月の累計推移は9/25確認3記事を加えた22記事。固定比較値の9月1.65%・2Q2.22%は従来73記事の対象を保持している。",
+    "10/13 JST当日途中に登録9記事のMeta原数のみ更新。10/9夕方以降周知の2本を追加。月売上は10/9取得値を保持。",
+    "TKBC医療痩身女性003は10/11までMeta該当配信行なし（原数null、平均対象外）、初観測10/12。10/11の累計9登録記事中、CV/Clicks算出対象は8記事。"
   ]
 }

@@ -1,17 +1,30 @@
 {
-  "asOf": "2026-10-09",
-  "fetchedAtJst": "2026-10-09T13:08:59+09:00",
+  "asOf": "2026-10-13",
+  "fetchedAtJst": "2026-10-13T11:05:07+09:00",
   "populationComplete": false,
   "counts": {
-    "candidateArticles": 8,
-    "adopted": 7,
-    "eligible": 7,
-    "excluded": 1,
+    "candidateArticles": 18,
+    "adopted": 9,
+    "eligible": 9,
+    "excluded": 9,
     "unmeasurable": 0,
     "noMatchingRows": 0,
     "unconfirmed": 0,
     "ambiguousCandidates": 0,
-    "outOfCandidateSetExcludedObserved": 2
+    "outOfCandidateSetExcludedObserved": 0
   },
-  "note": "10/9 13:08 JST取得、観測は各記事の採用リリース日〜10/9。タイトル・完成・周知日の一致を承認された基準として採用し、修正1記事を除く7記事を登録。平均は登録対象の記事ごとの単純平均です。10月売上はMG＋GGに対応すると確認されたAXAD旧第1＋第2事業部の全媒体revenue（10/1〜9）、FG/CG除外・差額調整なし。9月比較値は従来資料の値を保持。10/9当日分は途中実績。立案・施策件数は別の記録が必要です。"
+  "note": "10/13 11:05 JST当日途中、観測は登録9記事の各リリース日〜10/13。正式名・完成・周知日の一致を採用し、10/9 18:47・22:01周知の2記事を追加。前週10/5〜11は4記事、3Q累計9記事。今回10/5〜9完成の原票13件は4記事採用・貸し6件と修正3件除外（改修は含む）。初回8候補との和集合18件で、採用9・除外9。原数はMetaのみ・案件×番号で照合・曖昧番号を除外。平均は記事ごとのCV/Clicks単純平均。今回は記事のみ更新し、10月売上は10/9取得の全媒体revenueを保持。9月・2Q基準、9月trend、施策、週次文章・個人・定性・過去snapshotを保持。網羅性は未確定。",
+  "salesAsOf": "2026-10-09",
+  "refreshScope": "articles_only",
+  "countScope": "初回10/9原票8候補と今回10/5〜9完成の原票13候補の正式名での和集合（重複3件を除く18件）",
+  "reconciliationCounts": {
+    "releaseStart": "2026-10-05",
+    "releaseEnd": "2026-10-09",
+    "sourceCandidates": 13,
+    "confirmed": 4,
+    "added": 2,
+    "excluded": 9,
+    "borrowedExcluded": 6,
+    "modifiedExcluded": 3
+  }
 }
