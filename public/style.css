@@ -45,3 +45,5 @@
 .legacy-review-import{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 12px;font-size:11px;color:var(--muted)}.article-review-panel>.block-actions{margin-bottom:12px}
 
 .performance-table .metric-metaRealCvr{width:88px}.performance-table .kpi-metric{background:#f0faf5;color:#167454}.performance-table th.kpi-metric{font-size:9px}.table-source{font-size:10px;color:var(--muted);padding:0 18px 10px}
+
+.report-card textarea{height:max(156px,calc(6lh + 44px))}.article-review-panel .review-fields textarea{height:max(200px,calc(6lh + 44px))}

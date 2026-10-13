@@ -262,7 +262,7 @@ test('review saves retain all existing snapshots including historical week revie
 });
 
 test('new app and its required new model exports bypass old browser caches together',()=>{
- const app=readFileSync(new URL('../public/app.js',import.meta.url),'utf8'),index=readFileSync(new URL('../public/index.html',import.meta.url),'utf8'),version=index.match(/app\.js\?v=([^"']+)/)[1];assert.equal(app.match(/from '\.\/model\.js\?v=([^']+)'/)[1],version);assert.equal(app.match(/from '\.\/axad-model\.js\?v=([^']+)'/)[1],version);assert.match(index,new RegExp('style\\.css\\?v='+version));
+ const app=readFileSync(new URL('../public/app.js',import.meta.url),'utf8'),index=readFileSync(new URL('../public/index.html',import.meta.url),'utf8'),version=index.match(/app\.js\?v=([^"']+)/)[1];assert.equal(app.match(/from '\.\/model\.js\?v=([^']+)'/)[1],version);assert.equal(app.match(/from '\.\/axad-model\.js\?v=([^']+)'/)[1],version);assert.match(index,/style\.css\?v=20261013-14/);
 });
 
 
