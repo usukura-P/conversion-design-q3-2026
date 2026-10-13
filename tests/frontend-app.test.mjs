@@ -7,15 +7,15 @@ import * as axadModel from '../public/axad-model.js';
 import {validateState} from '../server/validation.mjs';
 const source=readFileSync(new URL('../public/app.js',import.meta.url),'utf8').replace(/^import .*?;\n/gm,'').replace(/boot\(\)(?:\.then\([^\n]+\))?;\s*$/,'');
 function harness(storage=new Map(),seed=model.initialState()){
- const nodes=new Map(),fields=[],reviewFields=[],windows={};
- const element=()=>({disabled:false,style:{},dataset:{},classList:{toggle(){},add(){},remove(){}},listeners:{},addEventListener(type,fn){this.listeners[type]=fn;},querySelector(sel){return sel==='input:invalid'?null:node(sel);},querySelectorAll(sel){return sel==='[data-block]'?fields:sel==='[data-review-key]'?reviewFields:[];},focus(){},scrollIntoView(options){this.scrolled=options;},matches(){return false;}});
+ const nodes=new Map(),fields=[],reviewFields=[],reviewBadges=[],windows={};
+ const element=()=>({disabled:false,style:{},dataset:{},attributes:{},setAttribute(key,value){this.attributes[key]=value;},classList:{toggle(){},add(){},remove(){}},listeners:{},addEventListener(type,fn){this.listeners[type]=fn;},querySelector(sel){return sel==='input:invalid'?null:node(sel);},querySelectorAll(sel){return sel==='[data-block]'?fields:sel==='[data-review-key]'?reviewFields:sel==='[data-review-rating-badge]'?reviewBadges:[];},focus(){},scrollIntoView(options){this.scrolled=options;},matches(){return false;}});
  function node(s){if(!nodes.has(s))nodes.set(s,element());return nodes.get(s);}
  const localStorage={setItem(k,v){storage.set(k,v);},getItem(k){return storage.get(k)||null;},removeItem(k){storage.delete(k);},get length(){return storage.size;},key(i){return [...storage.keys()][i]}};
  const ctx=vm.createContext({...model,...axadModel,structuredClone,Intl,Date,URL,Blob,AbortController,crypto:globalThis.crypto,console,setTimeout:()=>1,clearTimeout(){},confirm:()=>true,document:{querySelector:node,querySelectorAll:()=>[],body:element()},window:{addEventListener(t,f){windows[t]=f;}},IntersectionObserver:class{observe(){}},localStorage,seed});
  vm.runInContext(source+`\nstate=structuredClone(seed);sharedState=structuredClone(seed);activeWeek=seed.weeks[0].id;revision='r1';config={apiBase:'https://mock.invalid'};apiReady=true;editor='QA';globalThis.api={saveBlock,render,storeDraft,history,dispatchChart,report,initiativeDetails,articleSection,safeUrl,refreshShared,scanDrafts,downloadDraft,get:()=>({state,sharedState,revision,dirty,savingKey,syncing,blockDrafts,availableDrafts,axadData,importStatus,articleLinks}),path:inputBlockPath,valuePath:stableInputPath,keyFor,getKey:()=>OWN_DRAFT_KEY,export:()=>exportBlockDrafts(sharedState,blockDrafts)};globalThis.setValue=(k,v)=>eval(k+' = v');`,ctx);
  return {ctx,api:ctx.api,node,fields,windows,storage,set:(key,value)=>ctx.setValue(key,value),request:fn=>{ctx.mockRequest=fn;vm.runInContext('request=mockRequest',ctx);},input(path,value,type='text'){
   const key=ctx.api.keyFor(ctx.api.path(path));const el={dataset:{path,valuePath:ctx.api.keyFor(ctx.api.valuePath(path)),block:key,type},value};fields.push(el);node('#main').listeners.input({target:el});return key;
- },reviewInput(key,field,value){const el={dataset:{reviewKey:key,reviewField:field},value};reviewFields.push(el);node('#main').listeners.input({target:el});return el;},click(action,data={}){const button={dataset:{action,...data},disabled:false};return node('#main').listeners.click({target:{closest:selector=>selector==='[data-action]'?button:null}});}};
+ },reviewInput(key,field,value){const el={dataset:{reviewKey:key,reviewField:field},value};reviewFields.push(el);node('#main').listeners.input({target:el});return el;},reviewBadge(key){const el=element();el.dataset.reviewRatingBadge=key;reviewBadges.push(el);return el;},click(action,data={}){const button={dataset:{action,...data},disabled:false};return node('#main').listeners.click({target:{closest:selector=>selector==='[data-action]'?button:null}});}};
 }
 const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 function mockApi(h,initial=model.initialState()){
@@ -169,6 +169,29 @@ test('team report has three single labels and hides requests and issues while re
 });
 test('past weeks display saved measurements and never reuse current global initiative or article tables',()=>{
  const seed=performanceSeed();seed.weeks.push(model.createWeek('2026-10-19'));const h=harness(new Map(),seed);h.set('axadData',performanceData(seed));h.api.render();const html=h.node('#main').innerHTML,past=html.slice(html.indexOf('id="week-2026-10-12"'));assert.match(past,/記事の当時の詳細データは未保存/);assert.match(past,/保存時のCVR/);assert.match(past,/data-path="weeks.0.members.aoki.reflection"/);assert.doesNotMatch(past,/performance-table|data-action="add-article"|id="articles"|id="members"/);assert.equal((html.match(/id="articles"/g)||[]).length,1);assert.equal((html.match(/id="members"/g)||[]).length,1);
+});
+
+test('old three-field reviews migrate to unrated and invalid stored ratings preserve note text',()=>{
+ const seed=performanceSeed(),key=encodeURIComponent(JSON.stringify([seed.weeks[0].id,seed.articles[0].id])),prefix='article-team-q3-2026-article-review-v1-';
+ for(const rating of [undefined,'invalid','◯','<img src=x onerror=alert(1)>']){
+  const storage=new Map([[prefix+key,JSON.stringify({schemaVersion:1,fields:{result:'昔の結果',analysis:'昔の考察',next:'昔のネクスト',...(rating===undefined?{}:{rating})}})]]),h=harness(storage,seed);h.api.render();const html=h.node('#main').innerHTML;
+  assert.match(html,/<select[^>]+data-review-field="rating"[^>]*><option value="" selected>未評価<\/option>/);assert.match(html,/昔の結果/);assert.match(html,/昔の考察/);assert.match(html,/昔のネクスト/);assert.doesNotMatch(html,/下書きを読み込めません|<img src=x/);h.reviewInput(key,'rating','good');const saved=JSON.parse(storage.get(prefix+key));assert.equal(saved.fields.rating,'good');assert.equal(saved.fields.result,'昔の結果');
+ }
+});
+
+test('manual ratings sync selectors and row badges, persist by week and never enter shared POST',async()=>{
+ const seed=performanceSeed(),storage=new Map(),h=harness(storage,seed),net=mockApi(h,seed),key=h.api.keyFor([seed.weeks[0].id,seed.articles[0].id]);h.api.render();const first=h.reviewInput(key,'rating',''),badges=[h.reviewBadge(key),h.reviewBadge(key)];
+ for(const [value,label] of [['good','◯'],['caution','△'],['bad','×'],['','—']]){
+  h.reviewInput(key,'rating',value);assert.equal(first.value,value);assert.equal(first.dataset.reviewRating,value);for(const badge of badges){assert.equal(badge.textContent,label);assert.equal(badge.dataset.reviewRating,value);assert.equal(badge.attributes['aria-label'],'評価：'+(value?label:'未評価'));}
+ }
+ h.reviewInput(key,'rating','good');await h.click('toggle-review',{reviewKey:key});await h.click('toggle-review',{reviewKey:key});h.api.render();let html=h.node('#main').innerHTML;assert.equal((html.match(/data-review-rating-badge=/g)||[]).length,2);assert.equal((html.match(/data-review-rating="good" aria-label="評価：◯">◯<\/span>/g)||[]).length,2);assert.match(html,/<option value="good" selected>◯<\/option>/);assert.ok(html.indexOf('data-review-field="rating"')<html.indexOf('data-review-field="result"'));assert.match(html,/data-review-panel="[^\"]+" hidden/);assert.doesNotMatch(html.slice(html.indexOf('<tfoot>'),html.indexOf('</tfoot>')),/rating/);
+ const reloaded=harness(storage,seed);reloaded.api.render();assert.match(reloaded.node('#main').innerHTML,/<option value="good" selected>◯<\/option>/);const otherSeed=structuredClone(seed);otherSeed.weeks=[model.createWeek('2026-10-19')];const other=harness(storage,otherSeed);other.api.render();assert.doesNotMatch(other.node('#main').innerHTML,/<option value="good" selected>/);
+ await h.api.saveBlock(h.input('weeks.0.team.status','共有報告'));assert.equal(net.posts.length,1);assert.doesNotMatch(JSON.stringify(net.posts),/rating|"good"/);assert.equal(h.api.get().state.articles[0].metaCv,4);
+});
+
+test('invalid manual ratings cannot overwrite the selected rating or note text',()=>{
+ const seed=performanceSeed(),storage=new Map(),h=harness(storage,seed),key=h.api.keyFor([seed.weeks[0].id,seed.articles[0].id]);h.api.render();h.reviewInput(key,'result','既存結果');h.reviewInput(key,'rating','caution');const before=storage.get('article-team-q3-2026-article-review-v1-'+key);
+ for(const invalid of ['other','◯','__proto__','<img src=x>']){const el=h.reviewInput(key,'rating',invalid);assert.equal(el.value,'caution');assert.equal(storage.get('article-team-q3-2026-article-review-v1-'+key),before);}h.api.render();assert.match(h.node('#main').innerHTML,/<option value="caution" selected>△<\/option>/);assert.match(h.node('#main').innerHTML,/既存結果/);assert.equal(Object.keys(h.api.get().blockDrafts).length,0);
 });
 
 test('article row review toggles preserve notes through rerender and reload, scoped by report week',async()=>{

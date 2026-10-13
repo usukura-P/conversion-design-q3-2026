@@ -10,6 +10,7 @@ const editing=true;
 const weekDisclosureState=new Map();
 const ARTICLE_REVIEW_PREFIX='article-team-q3-2026-article-review-v1-';
 const REVIEW_FIELDS=[['result','結果'],['analysis','考察'],['next','ネクスト']];
+const REVIEW_RATINGS=[['','未評価'],['good','◯'],['caution','△'],['bad','×']];
 const articleReviewDrafts=new Map(),openArticleReviews=new Set();
 const DRAFT_KEY='article-team-q3-2026-blocks-v2-';
 const TAB_ID=crypto.randomUUID(),OWN_DRAFT_KEY=DRAFT_KEY+TAB_ID;
@@ -125,18 +126,21 @@ function validReviewKey(key){
 }
 function articleReviewDraft(key){
  if(articleReviewDrafts.has(key))return articleReviewDrafts.get(key);
- const draft={fields:{result:'',analysis:'',next:''},error:'',saved:false};
+ const draft={fields:{rating:'',result:'',analysis:'',next:''},error:'',saved:false};
  try{const text=localStorage.getItem(ARTICLE_REVIEW_PREFIX+key);if(text){const parsed=JSON.parse(text);if(parsed?.schemaVersion!==1||!parsed.fields||REVIEW_FIELDS.some(([field])=>typeof parsed.fields[field]!=='string'))throw new Error('invalid draft');
-  for(const [field] of REVIEW_FIELDS)draft.fields[field]=parsed.fields[field].slice(0,6000);draft.saved=true;
+  for(const [field] of REVIEW_FIELDS)draft.fields[field]=parsed.fields[field].slice(0,6000);if(REVIEW_RATINGS.some(([value])=>value===parsed.fields.rating))draft.fields.rating=parsed.fields.rating;draft.saved=true;
  }}catch{draft.error='保存済み下書きを読み込めません。入力すると新しい下書きとして保存します。';}
  articleReviewDrafts.set(key,draft);return draft;
 }
 function reviewDraftStatus(draft){return 'この端末の下書き（共有保存は未対応）'+(draft.error?' · '+draft.error:draft.saved?' · 保存済み':'');}
+function reviewRatingLabel(value){return REVIEW_RATINGS.find(([rating])=>rating===value)?.[1]||'未評価';}
+function articleRatingBadge(key){const value=articleReviewDraft(key).fields.rating;return `<span class="article-rating-badge" data-review-rating-badge="${e(key)}" data-review-rating="${value}" aria-label="評価：${reviewRatingLabel(value)}">${value?reviewRatingLabel(value):'—'}</span>`;}
 function saveArticleReviewInput(el){
- const key=el.dataset.reviewKey,field=el.dataset.reviewField;if(!validReviewKey(key)||!REVIEW_FIELDS.some(([name])=>name===field))return;
- const draft=articleReviewDraft(key),value=String(el.value??'').slice(0,6000);el.value=value;draft.fields[field]=value;
+ const key=el.dataset.reviewKey,field=el.dataset.reviewField;if(!validReviewKey(key)||(field!=='rating'&&!REVIEW_FIELDS.some(([name])=>name===field)))return;
+ const draft=articleReviewDraft(key),value=String(el.value??'').slice(0,6000);if(field==='rating'&&!REVIEW_RATINGS.some(([rating])=>rating===value)){el.value=draft.fields.rating;return;}el.value=value;draft.fields[field]=value;
  try{localStorage.setItem(ARTICLE_REVIEW_PREFIX+key,JSON.stringify({schemaVersion:1,fields:draft.fields}));draft.error='';draft.saved=true;}catch{draft.error='この端末に保存できません。画面上の入力を保持しています。';draft.saved=false;}
- main.querySelectorAll('[data-review-key]').forEach(other=>{if(other!==el&&other.dataset.reviewKey===key&&other.dataset.reviewField===field)other.value=value;});
+ main.querySelectorAll('[data-review-key]').forEach(other=>{if(other.dataset.reviewKey===key&&other.dataset.reviewField===field){other.value=value;if(field==='rating')other.dataset.reviewRating=value;}});
+ if(field==='rating')main.querySelectorAll('[data-review-rating-badge]').forEach(badge=>{if(badge.dataset.reviewRatingBadge===key){badge.dataset.reviewRating=value;badge.textContent=value?reviewRatingLabel(value):'—';badge.setAttribute('aria-label','評価：'+reviewRatingLabel(value));}});
  main.querySelectorAll('[data-review-status]').forEach(status=>{if(status.dataset.reviewStatus===key){status.textContent=reviewDraftStatus(draft);status.classList.toggle('error',Boolean(draft.error));}});
 }
 function toggleArticleReview(key){
@@ -146,7 +150,7 @@ function toggleArticleReview(key){
 }
 function articleReviewPanel(a,idx,week,view){
  const key=keyFor([week.id,a.id]),draft=articleReviewDraft(key),id='article-review-'+view+'-'+encodeURIComponent(week.id)+'-'+encodeURIComponent(a.id);
- return `<tr class="performance-review-row" data-review-panel="${e(key)}" ${openArticleReviews.has(key)?'':'hidden'}><td colspan="17" class="performance-review-cell"><div id="${e(id)}" class="article-review-panel" role="region" aria-label="${e(a.title)||'新しい記事'}の振り返り"><p class="local-review-status ${draft.error?'error':''}" data-review-status="${e(key)}" role="status">${e(reviewDraftStatus(draft))}</p><div class="review-fields">${REVIEW_FIELDS.map(([field,label])=>`<label class="form-field" for="local-note-${e(id)}-${field}"><span>${label}</span><textarea id="local-note-${e(id)}-${field}" data-review-key="${e(key)}" data-review-field="${field}" rows="3" maxlength="6000" placeholder="${label}を記入">${e(draft.fields[field])}</textarea></label>`).join('')}</div>${articleDetails(a,idx,week)}</div></td></tr>`;
+ return `<tr class="performance-review-row" data-review-panel="${e(key)}" ${openArticleReviews.has(key)?'':'hidden'}><td colspan="17" class="performance-review-cell"><div id="${e(id)}" class="article-review-panel" role="region" aria-label="${e(a.title)||'新しい記事'}の振り返り"><p class="local-review-status ${draft.error?'error':''}" data-review-status="${e(key)}" role="status">${e(reviewDraftStatus(draft))}</p><div class="review-fields"><label class="form-field review-rating-field" for="local-note-${e(id)}-rating"><span>評価</span><select id="local-note-${e(id)}-rating" data-review-key="${e(key)}" data-review-field="rating" data-review-rating="${draft.fields.rating}">${REVIEW_RATINGS.map(([value,label])=>`<option value="${value}" ${draft.fields.rating===value?'selected':''}>${label}</option>`).join('')}</select></label>${REVIEW_FIELDS.map(([field,label])=>`<label class="form-field" for="local-note-${e(id)}-${field}"><span>${label}</span><textarea id="local-note-${e(id)}-${field}" data-review-key="${e(key)}" data-review-field="${field}" rows="3" maxlength="6000" placeholder="${label}を記入">${e(draft.fields[field])}</textarea></label>`).join('')}</div>${articleDetails(a,idx,week)}</div></td></tr>`;
 }
 function articleTitleUrl(article){
  if(articleLinks?.schemaVersion!==1||!Array.isArray(articleLinks.articles))return null;
@@ -160,7 +164,7 @@ function performanceTable(rows,week,label,view='previous'){
  return `<div class="table-wrap performance-wrap" tabindex="0" aria-label="${e(label)}。横にスクロールして全指標を確認できます。"><table class="data-table performance-table"><colgroup><col class="article-column">${PERFORMANCE_COLUMNS.map(([key])=>`<col class="metric-${key}">`).join('')}</colgroup><thead><tr><th>記事名</th>${PERFORMANCE_COLUMNS.map(([,name])=>`<th>${name}</th>`).join('')}</tr></thead><tbody>${evaluated.map(({a,idx,match})=>{
   const key=keyFor([week.id,a.id]),id='article-review-'+view+'-'+encodeURIComponent(week.id)+'-'+encodeURIComponent(a.id);if(!a.title)openArticleReviews.add(key);
   const url=articleTitleUrl(a),title=e(a.title)||'記事名未記入';
-  return `<tr class="performance-article-row" data-review-row="${e(key)}"><td class="title-cell sticky-title"><div class="article-title-line"><button type="button" class="article-review-toggle" data-action="toggle-review" data-review-key="${e(key)}" aria-label="${title}の振り返りを開閉" aria-expanded="${openArticleReviews.has(key)}" aria-controls="${e(id)}"><span class="review-chevron" aria-hidden="true"></span></button>${url?`<a class="article-title-link" href="${e(url)}" target="_blank" rel="noopener noreferrer"><strong>${title}</strong></a>`:`<strong class="article-title-plain">${title}</strong>`}</div></td>${performanceCells(performanceMetrics(match.raw))}</tr>${articleReviewPanel(a,idx,week,view)}`;
+  return `<tr class="performance-article-row" data-review-row="${e(key)}"><td class="title-cell sticky-title"><div class="article-title-line"><button type="button" class="article-review-toggle" data-action="toggle-review" data-review-key="${e(key)}" aria-label="${title}の振り返りを開閉" aria-expanded="${openArticleReviews.has(key)}" aria-controls="${e(id)}"><span class="review-chevron" aria-hidden="true"></span></button>${articleRatingBadge(key)}${url?`<a class="article-title-link" href="${e(url)}" target="_blank" rel="noopener noreferrer"><strong>${title}</strong></a>`:`<strong class="article-title-plain">${title}</strong>`}</div></td>${performanceCells(performanceMetrics(match.raw))}</tr>${articleReviewPanel(a,idx,week,view)}`;
  }).join('')}</tbody><tfoot><tr><td class="sticky-title"><strong>合計</strong><small>原数合算から比率を再算出</small></td>${performanceCells(totals)}</tr></tfoot></table></div>`;
 }
 function articleSection(week){
