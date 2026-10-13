@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-13T04:55:08.693Z",
+  "updatedAt": "2026-10-13T05:04:50.561Z",
   "baseline": {
     "septemberRevenue": 554427123,
     "septemberCvr": 1.653647261445,
@@ -1014,7 +1014,7 @@
           "id": "axad-release-row-206",
           "rating": "good",
           "result": "合算でCV9件、ROAS151.30%という点、\nMeta,tik両方でCV獲得できている点で◯と判断。\n\nCTRやCPCが変なのはMetaで「Audience Network」に44,566円配信されていたから。そちらに数値が引っ張られ変になっている。\nFacebook・Instagramなどに限るとCTRは1.18%。\n\n6件獲得できているFBでビヨンドの数値を見ると\n記事のverが２つあるうちどちらも等しく３件づつ取れていた。",
-          "analysis": "",
+          "analysis": "女性痩身系で好調だった記事型２種類をverに分けて用意したことで、取りこぼしが少なくなったと考察。\n\n",
           "next": "①運用者である龍哉くんにAudience Networkへの配信除外をお願いした。\n②Audience Networkへの配信が覗かれた明日以降の数値を引き続き追う。\n③記事verが２つに分かれているので、どちらかに数とが偏った場合配信割合を変更する。\n\n"
         }
       ]
