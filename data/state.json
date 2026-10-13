@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-09T07:06:45.988Z",
+  "updatedAt": "2026-10-13T02:12:31.470Z",
   "baseline": {
     "septemberRevenue": 554427123,
     "septemberCvr": 1.653647261445,
@@ -814,9 +814,9 @@
       "title": "★021_TCB-脂肪溶解からだ女性_最大無料_臼倉_フリップアンケ_新規_尿ドバドバ_20261007",
       "owner": "usukura",
       "releaseDate": "2026-10-07",
-      "observedThrough": "2026-10-09",
-      "metaCv": 0,
-      "metaClicks": 23
+      "observedThrough": "2026-10-13",
+      "metaCv": 4,
+      "metaClicks": 136
     },
     {
       "id": "axad-release-row-198",
@@ -826,7 +826,7 @@
       "releaseDate": "2026-10-01",
       "metaCv": 0,
       "metaClicks": 54,
-      "observedThrough": "2026-10-09"
+      "observedThrough": "2026-10-13"
     },
     {
       "id": "axad-release-row-199",
@@ -834,9 +834,9 @@
       "title": "★010_DIO脱毛男性_11ヶ月分100円_青木_VIO・素材一貫性_20261001",
       "owner": "aoki",
       "releaseDate": "2026-10-01",
-      "metaCv": 21,
-      "metaClicks": 1296,
-      "observedThrough": "2026-10-09"
+      "metaCv": 70,
+      "metaClicks": 3944,
+      "observedThrough": "2026-10-13"
     },
     {
       "id": "axad-release-row-200",
@@ -844,9 +844,9 @@
       "title": "★012_TCB-鼻女性_最大無料_青木_正面BA追加_Eライン_20261002",
       "owner": "aoki",
       "releaseDate": "2026-10-02",
-      "metaCv": 24,
-      "metaClicks": 663,
-      "observedThrough": "2026-10-09"
+      "metaCv": 30,
+      "metaClicks": 983,
+      "observedThrough": "2026-10-13"
     },
     {
       "id": "axad-release-row-201",
@@ -854,9 +854,9 @@
       "title": "★053_TCB-ピコレーザー女性_0円_中川_フリップアンケ_シミ肝斑_動画記事_20261002",
       "owner": "nakagawa",
       "releaseDate": "2026-10-02",
-      "metaCv": 55,
-      "metaClicks": 1981,
-      "observedThrough": "2026-10-09"
+      "metaCv": 69,
+      "metaClicks": 2648,
+      "observedThrough": "2026-10-13"
     },
     {
       "id": "axad-release-row-202",
@@ -866,7 +866,7 @@
       "releaseDate": "2026-10-02",
       "metaCv": 1,
       "metaClicks": 64,
-      "observedThrough": "2026-10-09"
+      "observedThrough": "2026-10-13"
     },
     {
       "id": "axad-release-row-205",
@@ -874,9 +874,29 @@
       "title": "★033_DIOクリニック女性_15ヶ月分100円_青木_CPA用_20261008",
       "owner": "aoki",
       "releaseDate": "2026-10-08",
-      "metaCv": 0,
-      "metaClicks": 18,
-      "observedThrough": "2026-10-09"
+      "metaCv": 1,
+      "metaClicks": 142,
+      "observedThrough": "2026-10-13"
+    },
+    {
+      "id": "axad-release-row-206",
+      "title": "★003_TKBC-医療痩身女性_0円_寒竹_型検証_新規_全身痩せ_20261009",
+      "owner": "kantake",
+      "releaseDate": "2026-10-09",
+      "metaCv": 6,
+      "metaClicks": 11366,
+      "observedThrough": "2026-10-13",
+      "initiativeId": null
+    },
+    {
+      "id": "axad-release-row-208",
+      "title": "★026_TCB-ピコレーザー男性_最大無料_青木_アンケ記事_新規_日焼けシミ特化_20261009",
+      "owner": "aoki",
+      "releaseDate": "2026-10-09",
+      "metaCv": 8,
+      "metaClicks": 441,
+      "observedThrough": "2026-10-13",
+      "initiativeId": null
     }
   ],
   "initiatives": [],
@@ -947,27 +967,27 @@
         }
       ],
       "metrics": {
-        "asOf": "2026-10-09T06:59:45.297Z",
-        "teamCvr": 1.3684507772182595,
-        "previousWeekCvr": 0,
-        "eligibleArticles": 7,
+        "asOf": "2026-10-13T02:05:07.000Z",
+        "teamCvr": 1.6119133160942833,
+        "previousWeekCvr": 1.3780624498752188,
+        "eligibleArticles": 9,
         "unmeasurableArticles": 0,
         "dispatched": 0,
         "people": {
           "usukura": {
-            "cvr": 1.3684507772182595,
+            "cvr": 1.6119133160942833,
             "proposals": 0
           },
           "kantake": {
-            "cvr": 0.78125,
+            "cvr": 0.5384296732946213,
             "proposals": 0
           },
           "aoki": {
-            "cvr": 1.7467599575442714,
+            "cvr": 1.836253543276892,
             "proposals": 0
           },
           "nakagawa": {
-            "cvr": 2.7763755678950024,
+            "cvr": 2.6057401812688825,
             "proposals": 0
           }
         },
